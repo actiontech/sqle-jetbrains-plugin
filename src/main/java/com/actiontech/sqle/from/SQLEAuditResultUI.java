@@ -73,6 +73,7 @@ public class SQLEAuditResultUI {
                 int preferedWidth = (int) myTable.getCellRenderer(row, col).getTableCellRendererComponent(myTable,
                         myTable.getValueAt(row, col), false, false, row, col).getPreferredSize().getWidth();
                 width = Math.max(width, preferedWidth);
+                width += 10;
 
                 int line = appearNumber(myTable.getValueAt(row, col).toString(), "<br>");
                 int height = (line + 3) * fontSize;
