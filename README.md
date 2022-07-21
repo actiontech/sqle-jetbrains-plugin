@@ -1,0 +1,1 @@
+# SQLE-Jetbrains-Plugin
