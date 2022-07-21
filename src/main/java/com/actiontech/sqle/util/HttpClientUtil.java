@@ -2,7 +2,6 @@ package com.actiontech.sqle.util;
 
 import com.actiontech.sqle.config.SQLEAuditResult;
 import com.actiontech.sqle.config.SQLESettings;
-import com.google.api.Http;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,10 +10,8 @@ import org.apache.http.HttpStatus;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
