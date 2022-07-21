@@ -11,8 +11,11 @@ import org.apache.http.HttpStatus;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +51,7 @@ public class HttpClientUtil {
             throw new Exception("login failed: " + resp.get("message").getAsString());
         }
         token = resp.get("data").getAsJsonObject().get("token").getAsString();
+        settings.setToken(token);
         return token;
     }
 
@@ -93,7 +97,7 @@ public class HttpClientUtil {
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Authorization", token);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -106,10 +110,11 @@ public class HttpClientUtil {
             Login();
             return sendGet(path);
         }
+        String respStr = response.toString();
         if (responseCode != HttpStatus.SC_OK) {
-            throw new Exception("response code != 200, message: " + response.toString());
+            throw new Exception("response code != 200, message: " + respStr);
         }
-        return new JsonParser().parse(response.toString()).getAsJsonObject();
+        return new JsonParser().parse(respStr).getAsJsonObject();
     }
 
     private JsonObject sendPostJson(String path, String request) throws Exception {
@@ -122,12 +127,12 @@ public class HttpClientUtil {
 
         conn.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-        wr.writeBytes(request);
+        wr.write(request.getBytes(StandardCharsets.UTF_8));
         wr.flush();
         wr.close();
 
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -140,9 +145,12 @@ public class HttpClientUtil {
             Login();
             return sendPostJson(path, request);
         }
+        String respStr = response.toString();
         if (responseCode != HttpStatus.SC_OK) {
-            throw new Exception("response code != 200, message: " + response.toString());
+            throw new Exception("response code != 200, message: " + respStr);
         }
-        return new JsonParser().parse(response.toString()).getAsJsonObject();
+        return new JsonParser().parse(respStr).getAsJsonObject();
     }
+
+
 }
