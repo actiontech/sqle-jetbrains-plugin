@@ -2,9 +2,9 @@
 
 ## 简介
 
-[SQLE](https://github.com/actiontech/sqle)
-贴心的为开发者准备了SQLE审核 [IDEA插件](https://github.com/actiontech/sqle-jetbrains-plugin), 开发者在写代码的时候可以很方便的通过SQLE插件得知自己的写的SQL存在的问题,
-帮助开发者对程序中使用到的SQL进行调优
+该项目是[SQLE](https://github.com/actiontech/sqle)
+的 [IDEA 审核插件](https://github.com/actiontech/sqle-jetbrains-plugin) ,
+该插件满足开发人员在开发阶段进行实时自助式的静态SQL审核，实现开发阶段审核上线等各个SQL开发阶段的SQL开发规范。
 
 ## 使用方式
 
