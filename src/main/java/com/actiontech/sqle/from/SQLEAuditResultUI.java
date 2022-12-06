@@ -71,7 +71,7 @@ public class SQLEAuditResultUI {
                 Component comp = myTable.prepareRenderer(myTable.getCellRenderer(row, column), row, column);
                 rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
             }
-            myTable.setRowHeight(row, rowHeight + 10);
+            myTable.setRowHeight(row, rowHeight + myTable.getFont().getSize() + (int) (myTable.getIntercellSpacing().getHeight()));
         }
     }
 
@@ -84,28 +84,18 @@ public class SQLEAuditResultUI {
                 Component comp = myTable.prepareRenderer(renderer, row, column);
                 width = Math.max(comp.getPreferredSize().width, width);
             }
-            if (column != 0) {
-                width += 10;
-            }
 
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
             if (column == 0) {
-                DefaultTableCellRenderer r = new DefaultTableCellRenderer();
                 r.setHorizontalAlignment(JLabel.CENTER);
                 columnModel.getColumn(column).setCellRenderer(r);
+            } else {
+                width += myTable.getFont().getSize() + myTable.getIntercellSpacing().getWidth();
             }
+
             columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
-
-    public static int appearNumber(String srcText, String findText) {
-        if (findText.equals("")) {
-            return 0;
-        }
-        int oldCount = srcText.length();
-        int newCount = srcText.replaceAll(findText, "").length();
-        return (oldCount - newCount) / findText.length();
-    }
-
 
     public String generateHtml(String text) {
         text = text.trim();
