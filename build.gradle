@@ -10,7 +10,7 @@ plugins {
 }
 
 group 'com.actiontech.sqle'
-version "1.2207.0"
+version "2.2212.0"
 
 repositories {
     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }

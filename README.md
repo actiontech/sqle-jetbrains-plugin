@@ -19,6 +19,14 @@
 也可以在 [File] - [settings] - [Plugins] 中手动安装
 ![img.png](doc_image/install_plugin.png)
 
+### 插件升级说明
+
+1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件
+   ![img.png](doc_image/remove_plugin.png)
+2. 安装新版插件
+
+   略
+
 ### 使用说明
 
 #### 配置插件
