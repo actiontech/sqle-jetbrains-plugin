@@ -72,7 +72,11 @@ public class HttpClientUtil {
         return list;
     }
 
-    public SQLEAuditResult AuditSQL(String sql) throws Exception {
+    public enum AuditType {
+        SQL, MyBatis;
+    }
+
+    public SQLEAuditResult AuditSQL(String sql, AuditType type) throws Exception {
         if (token == null || token.equals("")) {
             Login();
         }
@@ -80,6 +84,16 @@ public class HttpClientUtil {
         Map<String, String> req = new HashMap<>();
         req.put("instance_type", settings.getDBType());
         req.put("sql_content", sql);
+
+        switch (type) {
+            case SQL:
+                req.put("sql_type", "sql");
+                break;
+            case MyBatis:
+                req.put("sql_type", "mybatis");
+                break;
+        }
+
         Gson gson = new Gson();
         String reqJson = gson.toJson(req);
         JsonObject resp = sendPostJson(uriHead + auditPath, reqJson);

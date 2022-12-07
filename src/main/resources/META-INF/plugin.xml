@@ -19,7 +19,8 @@
     </extensions>
 
     <actions>
-        <group id="SQLEActionGroup" class="com.actiontech.sqle.action.SQLEActionGroup" text="SQLE" compact="true"
+        <group id="SQLEActionEditorGroup" class="com.actiontech.sqle.action.SQLEActionEditorGroup" text="SQLE"
+               compact="true"
                popup="true">
             <action id="AuditAction" class="com.actiontech.sqle.action.AuditEditor" text="Audit"
                     description="Audit user selected content">
@@ -28,5 +29,21 @@
 
             <add-to-group group-id="EditorPopupMenu" relative-to-action="EditorPopupMenu1" anchor="before"/>
         </group>
+
+        <group id="SQLEActionProjectGroup" class="com.actiontech.sqle.action.SQLEActionProjectGroup" text="SQLE"
+               compact="true"
+               popup="true">
+
+            <action id="ProjectPopupMenuActionMyBatis" class="com.actiontech.sqle.action.AuditMyBatis"
+                    text="MyBatis Audit" description="Audit MyBatis file">
+            </action>
+
+            <action id="ProjectPopupMenuActionSQLFile" class="com.actiontech.sqle.action.AuditSQLFile"
+                    text="SQL file Audit" description="Audit SQL file">
+            </action>
+
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </group>
     </actions>
 </idea-plugin>
+

@@ -6,10 +6,10 @@ import com.actiontech.sqle.config.SQLEAuditResultItem;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 public class SQLEAuditResultUI {
     private JPanel rootPanel;
@@ -51,56 +51,54 @@ public class SQLEAuditResultUI {
         }
         JTable table = new JTable(data, columnNames);
 
-        FitTableColumns(table);
+        FitTableSize(table);
         JTableHeader jTableHeader = table.getTableHeader();
         tableJPanel.add(jTableHeader, BorderLayout.NORTH);
         tableJPanel.add(table, BorderLayout.CENTER);
 
     }
 
-    public void FitTableColumns(JTable myTable) {
-        JTableHeader header = myTable.getTableHeader();
-        int rowCount = myTable.getRowCount();
-        Enumeration columns = myTable.getColumnModel().getColumns();
-        while (columns.hasMoreElements()) {
-            TableColumn column = (TableColumn) columns.nextElement();
-            int col = header.getColumnModel().getColumnIndex(column.getIdentifier());
-            int width = (int) myTable.getTableHeader().getDefaultRenderer()
-                    .getTableCellRendererComponent(myTable, column.getIdentifier()
-                            , false, false, -1, col).getPreferredSize().getWidth();
-            int fontSize = myTable.getFont().getSize();
-            for (int row = 0; row < rowCount; row++) {
-                int preferedWidth = (int) myTable.getCellRenderer(row, col).getTableCellRendererComponent(myTable,
-                        myTable.getValueAt(row, col), false, false, row, col).getPreferredSize().getWidth();
-                width = Math.max(width, preferedWidth);
-                width += 10;
+    public void FitTableSize(JTable myTable) {
+        FitTableWidth(myTable);
+        FitTableHeight(myTable);
+    }
 
-                int line = appearNumber(myTable.getValueAt(row, col).toString(), "<br>");
-                int height = (line + 3) * fontSize;
-                myTable.setRowHeight(row, height);
+
+    public void FitTableHeight(JTable myTable) {
+        for (int row = 0; row < myTable.getRowCount(); row++) {
+            int rowHeight = myTable.getRowHeight();
+            for (int column = 0; column < myTable.getColumnCount(); column++) {
+                Component comp = myTable.prepareRenderer(myTable.getCellRenderer(row, column), row, column);
+                rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
             }
-            header.setResizingColumn(column); // 此行很重要
-            column.setWidth(width + myTable.getIntercellSpacing().width);
+            myTable.setRowHeight(row, rowHeight + myTable.getFont().getSize() + (int) (myTable.getIntercellSpacing().getHeight()));
         }
-
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(JLabel.CENTER);
-        myTable.setDefaultRenderer(Object.class, r);
-        int rootPanelHeight = myTable.getHeight() + titlePanel.getHeight() + overviewPanel.getHeight();
-        rootPanel.setPreferredSize(new Dimension(myTable.getWidth(), 300));
     }
 
-    public static int appearNumber(String srcText, String findText) {
-        if (findText.equals("")) {
-            return 0;
-        }
-        int oldCount = srcText.length();
-        int newCount = srcText.replaceAll(findText, "").length();
-        return (oldCount - newCount) / findText.length();
-    }
+    public void FitTableWidth(JTable myTable) {
+        final TableColumnModel columnModel = myTable.getColumnModel();
+        for (int column = 0; column < myTable.getColumnCount(); column++) {
+            int width = myTable.getTableHeader().getColumnModel().getColumn(column).getWidth();
+            for (int row = 0; row < myTable.getRowCount(); row++) {
+                TableCellRenderer renderer = myTable.getCellRenderer(row, column);
+                Component comp = myTable.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width, width);
+            }
 
+            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+            if (column == 0) {
+                r.setHorizontalAlignment(JLabel.CENTER);
+                columnModel.getColumn(column).setCellRenderer(r);
+            } else {
+                width += myTable.getFont().getSize() + myTable.getIntercellSpacing().getWidth();
+            }
+
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
+    }
 
     public String generateHtml(String text) {
+        text = text.trim();
         StringBuffer buffer = new StringBuffer();
         buffer.append("<html><body>");
         buffer.append(text.replaceAll("\n", "<br>"));

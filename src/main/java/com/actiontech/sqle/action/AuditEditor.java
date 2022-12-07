@@ -21,34 +21,14 @@ public class AuditEditor extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
-        e.getPresentation().setEnabledAndVisible(true);
+        String selectedText = e.getRequiredData(CommonDataKeys.EDITOR).getSelectionModel().getSelectedText();
+        e.getPresentation().setEnabledAndVisible(!(selectedText == null || selectedText.equals("")));
     }
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         // 获取鼠标选中的文本
         String selectedText = e.getRequiredData(CommonDataKeys.EDITOR).getSelectionModel().getSelectedText();
-        if (selectedText == null || selectedText.equals("")) {
-            NotifyUtil.showErrorMessageDialog("SQLE", "Please select the text before reviewing");
-            return;
-        }
-
-        SQLESettings settings = SQLESettings.getInstance();
-
-        HttpClientUtil client = new HttpClientUtil(settings);
-        try {
-            SQLEAuditResult result = client.AuditSQL(selectedText);
-            SQLEAuditResultUI ui = new SQLEAuditResultUI(result);
-
-            ApplicationManager.getApplication().invokeLater(() -> {
-                DialogBuilder builder = new DialogBuilder();
-                builder.setTitle("SQLE");
-                builder.centerPanel(ui.getRootPanel());
-                builder.show();
-            });
-        } catch (Exception exception) {
-            String errMessage = NotifyUtil.getExceptionMessage(exception);
-            NotifyUtil.showErrorMessageDialog("Audit SQL Failed", errMessage);
-        }
+        Audit.Audit(e, selectedText, HttpClientUtil.AuditType.SQL);
     }
 }

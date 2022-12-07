@@ -7,13 +7,13 @@ import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
 
-public class SQLEActionGroup extends DefaultActionGroup {
+public class SQLEActionProjectGroup extends DefaultActionGroup {
 
     @Override
     public void update(@NotNull AnActionEvent event) {
-        // Enable/disable depending on whether user is editing
-        Editor editor = event.getData(CommonDataKeys.EDITOR);
-        event.getPresentation().setEnabled(editor != null);
+//        // Enable/disable depending on whether user is editing
+//        Editor editor = event.getData(CommonDataKeys.EDITOR);
+        event.getPresentation().setEnabled(true);
         // Always make visible.
         event.getPresentation().setVisible(true);
     }
