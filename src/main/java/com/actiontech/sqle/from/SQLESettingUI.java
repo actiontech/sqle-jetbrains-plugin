@@ -27,6 +27,9 @@ public class SQLESettingUI {
     private JRadioButton httpBtn;
     private JRadioButton httpsBtn;
     private JComboBox dbTypeBox;
+    private JComboBox projectBox;
+    private JComboBox dbDataSourceBox;
+    private JComboBox SchemaBox;
     private final SQLESettings settings;
 
     public SQLESettingUI(SQLESettings settings) {
