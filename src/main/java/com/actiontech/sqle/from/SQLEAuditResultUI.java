@@ -17,6 +17,7 @@ public class SQLEAuditResultUI {
     private JLabel passRate;
     private JLabel score;
     private JPanel tableJPanel;
+    private JPanel tableMetaDataJpanel;
     private JScrollPane scrollPane;
     private JPanel titlePanel;
     private JPanel overviewPanel;
