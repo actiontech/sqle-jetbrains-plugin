@@ -24,6 +24,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
 }
 
+setupDependencies {
+    doLast {
+        // Fixes IDEA-298989.
+        fileTree("$buildDir/instrumented/instrumentCode") { include("**/*Form.class") }.files.forEach { delete(it) }
+    }
+}
+
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     pluginName = "SQLE"
