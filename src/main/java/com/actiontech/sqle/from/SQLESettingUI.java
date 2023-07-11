@@ -49,9 +49,22 @@ public class SQLESettingUI {
         sqleUserName.setText(username);
         String pwd = settings.getPassword();
         sqlePassword.setText(pwd);
+
+        String projectName = settings.getProjectName();
+        projectBox.removeAllItems();
+        projectBox.addItem(projectName);
+
         String dbType = settings.getDBType();
         dbTypeBox.removeAllItems();
         dbTypeBox.addItem(dbType);
+
+        String dataSourceName = settings.getDataSourceName();
+        dbDataSourceBox.removeAllItems();
+        dbDataSourceBox.addItem(dataSourceName);
+
+        String schemaName = settings.getSchemaName();
+        SchemaBox.removeAllItems();
+        SchemaBox.addItem(schemaName);
     }
 
     public void reset() {
@@ -63,15 +76,25 @@ public class SQLESettingUI {
         settings.setUserName(sqleUserName.getText());
         settings.setPassword(new String(sqlePassword.getPassword()));
         settings.setDBType((String) dbTypeBox.getSelectedItem());
+        settings.setProjectName((String) projectBox.getSelectedItem());
+        settings.setDataSourceName((String) dbDataSourceBox.getSelectedItem());
+        settings.setSchemaName((String) SchemaBox.getSelectedItem());
     }
 
     public boolean isModified() {
         String dbType = (String) dbTypeBox.getSelectedItem();
+        String projectName = (String) projectBox.getSelectedItem();
+        String dataSourceName = (String) dbDataSourceBox.getSelectedItem();
+        String schemaName = (String) SchemaBox.getSelectedItem();
+
         return !sqleAddr.getText().equals(ObjectUtils.defaultIfNull(settings.getSQLEAddr(), "")) ||
                 (httpsBtn.isSelected() != settings.isEnableHttps()) ||
                 !sqleUserName.getText().equals(ObjectUtils.defaultIfNull(settings.getUserName(), "")) ||
                 !(new String(sqlePassword.getPassword())).equals(ObjectUtils.defaultIfNull(settings.getPassword(), "")) ||
-                !ObjectUtils.defaultIfNull(dbType, "").equals(settings.getDBType());
+                !ObjectUtils.defaultIfNull(dbType, "").equals(settings.getDBType()) ||
+                !ObjectUtils.defaultIfNull(projectName, "").equals(settings.getProjectName()) ||
+                !ObjectUtils.defaultIfNull(dataSourceName, "").equals(settings.getDataSourceName()) ||
+                !ObjectUtils.defaultIfNull(schemaName, "").equals(settings.getSchemaName());
     }
 
     private void loadListener() {
@@ -121,12 +144,52 @@ public class SQLESettingUI {
             }
         });
 
-        dbTypeBox.addFocusListener(new FocusListener() {
+        projectBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (sqleAddr.getText().equals("") ||
                         sqleUserName.getText().equals("") ||
                         new String(sqlePassword.getPassword()).equals("")) {
+                    return;
+                }
+
+                Object selected = projectBox.getSelectedItem();
+                String selectedItem = "";
+                if (selected != null) {
+                    selectedItem = selected.toString();
+                }
+                try {
+                    HttpClientUtil client = new HttpClientUtil(settings);
+                    ArrayList<String> projects = client.GetProjectList();
+                    projectBox.removeAllItems();
+                    for (int i = 0; i < projects.size(); i++) {
+                        projectBox.addItem(projects.get(i));
+                        if (projects.get(i).equals(selectedItem)) {
+                            projectBox.setSelectedItem(projects.get(i));
+                            settings.setProjectName(projects.get(i));
+                        }
+                    }
+                    projectBox.updateUI();
+                    projectBox.setPopupVisible(true);
+                } catch (Exception exception) {
+                    String errMessage = NotifyUtil.getExceptionMessage(exception);
+                    NotifyUtil.showErrorMessageDialog("Get Project List Failed", errMessage);
+                    projectBox.setFocusable(false);
+                    projectBox.setFocusable(true);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
+        dbTypeBox.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                String projectSelected = (String) projectBox.getSelectedItem();
+                if (projectSelected == null || projectSelected.equals("")) {
                     return;
                 }
 
@@ -153,6 +216,92 @@ public class SQLESettingUI {
                     NotifyUtil.showErrorMessageDialog("Get DBType List Failed", errMessage);
                     dbTypeBox.setFocusable(false);
                     dbTypeBox.setFocusable(true);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
+        dbDataSourceBox.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                String projectSelected = (String) projectBox.getSelectedItem();
+                String dbTypeSelected = (String) dbTypeBox.getSelectedItem();
+                if (projectSelected == null || projectSelected.equals("") ||
+                        dbTypeSelected == null || dbTypeSelected.equals("")) {
+                    return;
+                }
+
+                Object selected = dbDataSourceBox.getSelectedItem();
+                String selectedItem = "";
+                if (selected != null) {
+                    selectedItem = selected.toString();
+                }
+                try {
+                    HttpClientUtil client = new HttpClientUtil(settings);
+                    ArrayList<String> dataSources = client.GetDataSourceNameList(projectSelected, dbTypeSelected);
+                    dbDataSourceBox.removeAllItems();
+                    for (int i = 0; i < dataSources.size(); i++) {
+                        dbDataSourceBox.addItem(dataSources.get(i));
+                        if (dataSources.get(i).equals(selectedItem)) {
+                            dbDataSourceBox.setSelectedItem(dataSources.get(i));
+                            settings.setDataSourceName(dataSources.get(i));
+                        }
+                    }
+                    dbDataSourceBox.updateUI();
+                    dbDataSourceBox.setPopupVisible(true);
+                } catch (Exception exception) {
+                    String errMessage = NotifyUtil.getExceptionMessage(exception);
+                    NotifyUtil.showErrorMessageDialog("Get DataSource List Failed", errMessage);
+                    dbDataSourceBox.setFocusable(false);
+                    dbDataSourceBox.setFocusable(true);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
+        SchemaBox.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                String projectSelected = (String) projectBox.getSelectedItem();
+                String dbTypeSelected = (String) dbTypeBox.getSelectedItem();
+                String dbDataSourceSelected = (String) dbDataSourceBox.getSelectedItem();
+                if (projectSelected == null || projectSelected.equals("") ||
+                        dbTypeSelected == null || dbTypeSelected.equals("") ||
+                        dbDataSourceSelected == null || dbDataSourceSelected.equals("")) {
+                    return;
+                }
+
+                Object selected = SchemaBox.getSelectedItem();
+                String selectedItem = "";
+                if (selected != null) {
+                    selectedItem = selected.toString();
+                }
+                try {
+                    HttpClientUtil client = new HttpClientUtil(settings);
+                    ArrayList<String> schemas = client.GetSchemaList(projectSelected, dbDataSourceSelected);
+                    SchemaBox.removeAllItems();
+                    for (int i = 0; i < schemas.size(); i++) {
+                        SchemaBox.addItem(schemas.get(i));
+                        if (schemas.get(i).equals(selectedItem)) {
+                            SchemaBox.setSelectedItem(schemas.get(i));
+                            settings.setSchemaName(schemas.get(i));
+                        }
+                    }
+                    SchemaBox.updateUI();
+                    SchemaBox.setPopupVisible(true);
+                } catch (Exception exception) {
+                    String errMessage = NotifyUtil.getExceptionMessage(exception);
+                    NotifyUtil.showErrorMessageDialog("Get Schema List Failed", errMessage);
+                    SchemaBox.setFocusable(false);
+                    SchemaBox.setFocusable(true);
                 }
             }
 

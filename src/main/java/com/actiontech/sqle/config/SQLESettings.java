@@ -21,6 +21,9 @@ public class SQLESettings implements PersistentStateComponent<SQLESettings> {
     private String UserName;
     private String Password;
     private String DBType;
+    private String ProjectName;
+    private String DataSourceName;
+    private String SchemaName;
     private String Token;
 
     public static SQLESettings getInstance() {
