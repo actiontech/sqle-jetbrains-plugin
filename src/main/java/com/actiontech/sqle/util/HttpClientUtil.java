@@ -1,24 +1,20 @@
 package com.actiontech.sqle.util;
 
 import com.actiontech.sqle.config.SQLEAuditResult;
+import com.actiontech.sqle.config.SQLEProjectNameListResult;
 import com.actiontech.sqle.config.SQLESettings;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpStatus;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HttpClientUtil {
 
@@ -29,6 +25,8 @@ public class HttpClientUtil {
     private static final String loginPath = "/v1/login";
     private static final String auditPath = "/v1/sql_audit";
     private static final String driversPath = "/v1/configurations/drivers";
+
+    private static final String projectPath = "/v1/projects";
 
     public HttpClientUtil(SQLESettings settings) {
         String protocol = "http://";
@@ -69,6 +67,31 @@ public class HttpClientUtil {
         for (int i = 0; i < array.size(); i++) {
             list.add(array.get(i).getAsString());
         }
+        return list;
+    }
+
+    public ArrayList<String> GetProjectList() throws Exception {
+        if (token == null || token.equals("")) {
+            Login();
+        }
+
+        String reqPath = String.format("%s?page_index=%s&page_size=%s", projectPath, "1", "999999");
+        JsonObject resp = sendGet(uriHead + reqPath);
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("login failed: " + resp.get("message").getAsString());
+        }
+
+        Gson gson = new Gson();
+        Type datasetListType = new TypeToken<Collection<SQLEProjectNameListResult>>() {
+        }.getType();
+
+        JsonElement jsonObject = resp.get("data");
+        List<SQLEProjectNameListResult> ProjectNameList = gson.fromJson(jsonObject, datasetListType);
+        ArrayList<String> list = new ArrayList<>();
+        for (SQLEProjectNameListResult sqleProjectNameListResult : ProjectNameList) {
+            list.add(sqleProjectNameListResult.getName());
+        }
+
         return list;
     }
 
