@@ -1,6 +1,7 @@
 package com.actiontech.sqle.util;
 
 import com.actiontech.sqle.config.SQLEAuditResult;
+import com.actiontech.sqle.config.SQLEDataSourceNameListResult;
 import com.actiontech.sqle.config.SQLEProjectNameListResult;
 import com.actiontech.sqle.config.SQLESettings;
 import com.google.gson.*;
@@ -27,6 +28,8 @@ public class HttpClientUtil {
     private static final String driversPath = "/v1/configurations/drivers";
 
     private static final String projectPath = "/v1/projects";
+
+    private static final String dataSourcePath = "/v1/projects/%s/instances";
 
     public HttpClientUtil(SQLESettings settings) {
         String protocol = "http://";
@@ -90,6 +93,33 @@ public class HttpClientUtil {
         ArrayList<String> list = new ArrayList<>();
         for (SQLEProjectNameListResult sqleProjectNameListResult : ProjectNameList) {
             list.add(sqleProjectNameListResult.getName());
+        }
+
+        return list;
+    }
+
+    public ArrayList<String> GetDataSourceNameList(String projectName, String dbType) throws Exception {
+        if (token == null || token.equals("")) {
+            Login();
+        }
+
+        String dataSourcePath = String.format(HttpClientUtil.dataSourcePath, projectName);
+        String reqPath = String.format("%s?filter_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, dbType, "1", "999999");
+        JsonObject resp = sendGet(uriHead + reqPath);
+
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("login failed: " + resp.get("message").getAsString());
+        }
+
+        Gson gson = new Gson();
+        Type datasetlisttype = new TypeToken<Collection<SQLEDataSourceNameListResult>>() {
+        }.getType();
+
+        JsonElement jsonObject = resp.get("data");
+        List<SQLEDataSourceNameListResult> dataSourceNameListResultList = gson.fromJson(jsonObject, datasetlisttype);
+        ArrayList<String> list = new ArrayList<>();
+        for (SQLEDataSourceNameListResult dataSourceNameListResult : dataSourceNameListResultList) {
+            list.add(dataSourceNameListResult.getInstanceName());
         }
 
         return list;
