@@ -31,6 +31,8 @@ public class HttpClientUtil {
 
     private static final String dataSourcePath = "/v1/projects/%s/instances";
 
+    private static final String schemaPath = "/v1/projects/%s/instances/%s/schemas";
+
     public HttpClientUtil(SQLESettings settings) {
         String protocol = "http://";
         if (settings.isEnableHttps()) {
@@ -120,6 +122,27 @@ public class HttpClientUtil {
         ArrayList<String> list = new ArrayList<>();
         for (SQLEDataSourceNameListResult dataSourceNameListResult : dataSourceNameListResultList) {
             list.add(dataSourceNameListResult.getInstanceName());
+        }
+
+        return list;
+    }
+
+    public ArrayList<String> GetSchemaList(String projectName, String dataSourceName) throws Exception {
+        if (token == null || token.equals("")) {
+            Login();
+        }
+
+        String reqPath = String.format(HttpClientUtil.schemaPath, projectName, dataSourceName);
+        JsonObject resp = sendGet(uriHead + reqPath);
+
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("login failed: " + resp.get("message").getAsString());
+        }
+
+        JsonArray array = resp.get("data").getAsJsonObject().get("schema_name_list").getAsJsonArray();
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            list.add(array.get(i).getAsString());
         }
 
         return list;
