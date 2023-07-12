@@ -34,6 +34,8 @@ public class SQLEAuditResultUI {
         return rootPanel;
     }
 
+    JTable table = new JTable();
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
     private void loadData(SQLEAuditResult result, List<SQLESQLAnalysisResult> analysisResult) {
         auditLevel.setText(result.getAuditLevel());
         passRate.setText(String.valueOf(result.getPassRate()));
@@ -43,15 +45,15 @@ public class SQLEAuditResultUI {
         ArrayList<SQLEAuditResultItem> items = result.getSQLResults();
 
         String[] columnNames = {"序号", "审核SQL", "审核结果"};
-        Object[][] data = new Object[items.size()][3];
+        model.setColumnIdentifiers(columnNames);
+
         for (int i = 0; i < items.size(); i++) {
             Object[] item = new Object[3];
             item[0] = generateHtml(String.valueOf(items.get(i).getNumber()));
             item[1] = generateHtml(items.get(i).getExecSQL());
             item[2] = generateHtml(items.get(i).getAuditResult());
-            data[i] = item;
+            model.addRow(item);
         }
-        JTable table = new JTable(data, columnNames);
 
         FitTableSize(table);
         JTableHeader jTableHeader = table.getTableHeader();
