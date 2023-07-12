@@ -157,7 +157,12 @@ public class HttpClientUtil {
         String reqPath = String.format("%s%s?project_name=%s&instance_name=%s&schema_name=%s&sql=%s", uriHead, sqlAnalysisPath, projectName, dataSourceName, schemaName, encodedSql);
         JsonObject resp = sendGet(reqPath);
 
-        if (resp.get("code").getAsInt() != 0) {
+        int code = resp.get("code").getAsInt();
+        // 8002 means community version not support sql analysis
+        if (code == 8002) {
+            return new LinkedList<>();
+        }
+        if (code != 0) {
             throw new Exception("get sql analysis failed: " + resp.get("message").getAsString());
         }
 
