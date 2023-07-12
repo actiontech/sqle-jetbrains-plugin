@@ -29,7 +29,7 @@ public class SQLEAuditResultUI {
     public SQLEAuditResultUI(SQLEAuditResult result, List<SQLESQLAnalysisResult> analysisResult) {
         this.result = result;
         this.analysisResult = analysisResult;
-        loadData(result, analysisResult);
+        loadData(result);
         loadListener();
     }
 
@@ -39,7 +39,7 @@ public class SQLEAuditResultUI {
 
     JTable table = new JTable();
     DefaultTableModel model = (DefaultTableModel) table.getModel();
-    private void loadData(SQLEAuditResult result, List<SQLESQLAnalysisResult> analysisResult) {
+    private void loadData(SQLEAuditResult result) {
         auditLevel.setText(result.getAuditLevel());
         passRate.setText(String.valueOf(result.getPassRate()));
         score.setText(String.valueOf(result.getScore()));
