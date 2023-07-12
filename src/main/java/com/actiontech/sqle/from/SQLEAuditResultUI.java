@@ -41,6 +41,7 @@ public class SQLEAuditResultUI {
 
     JTable table = new JTable();
     DefaultTableModel model = (DefaultTableModel) table.getModel();
+
     private void loadData(SQLEAuditResult result) {
         auditLevel.setText(result.getAuditLevel());
         passRate.setText(String.valueOf(result.getPassRate()));
@@ -115,6 +116,16 @@ public class SQLEAuditResultUI {
     }
 
     private void loadListener() {
+        table.addMouseMotionListener(new MouseAdapter() {
+            public void mouseMoved(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    table.setToolTipText("<html>" + "鼠标左击显示SQL分析内容" + "</html>");
+                } else {
+                    table.setToolTipText("");
+                }
+            }
+        });
         table.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent event) {
                 if (event.getButton() == MouseEvent.BUTTON1) {
