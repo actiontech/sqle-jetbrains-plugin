@@ -1,6 +1,7 @@
 package com.actiontech.sqle.action;
 
 import com.actiontech.sqle.config.SQLEAuditResult;
+import com.actiontech.sqle.config.SQLESQLAnalysisResult;
 import com.actiontech.sqle.config.SQLESettings;
 import com.actiontech.sqle.from.SQLEAuditResultUI;
 import com.actiontech.sqle.util.HttpClientUtil;
@@ -10,6 +11,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogBuilder;
 
+import java.util.List;
+
 public class Audit {
     public static void Audit(AnActionEvent e, String sql, HttpClientUtil.AuditType type) {
 
@@ -18,8 +21,13 @@ public class Audit {
         HttpClientUtil client = new HttpClientUtil(settings);
         try {
             SQLEAuditResult result = client.AuditSQL(sql, type);
-            SQLEAuditResultUI ui = new SQLEAuditResultUI(result);
 
+            String projectName = settings.getProjectName();
+            String dataSourceName = settings.getDataSourceName();
+            String schemaName = settings.getSchemaName();
+
+            List<SQLESQLAnalysisResult> analysisResult = client.GetSQLAnalysis(sql, projectName, dataSourceName, schemaName);
+            SQLEAuditResultUI ui = new SQLEAuditResultUI(result, analysisResult);
             ApplicationManager.getApplication().invokeLater(() -> {
                 DialogBuilder builder = new DialogBuilder();
                 builder.setTitle("SQLE");

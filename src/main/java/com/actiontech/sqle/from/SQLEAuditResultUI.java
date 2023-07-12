@@ -1,15 +1,13 @@
 package com.actiontech.sqle.from;
 
-import com.actiontech.sqle.config.SQLEAuditResult;
-import com.actiontech.sqle.config.SQLEAuditResultItem;
+import com.actiontech.sqle.config.*;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SQLEAuditResultUI {
     private JPanel rootPanel;
@@ -17,23 +15,26 @@ public class SQLEAuditResultUI {
     private JLabel passRate;
     private JLabel score;
     private JPanel tableJPanel;
-    private JPanel tableMetaDataJpanel;
     private JScrollPane scrollPane;
     private JPanel titlePanel;
     private JPanel overviewPanel;
+    private JPanel tableMetaDataJpanel;
     private SQLEAuditResult result;
 
+    private List<SQLESQLAnalysisResult> analysisResult;
 
-    public SQLEAuditResultUI(SQLEAuditResult result) {
+
+    public SQLEAuditResultUI(SQLEAuditResult result, List<SQLESQLAnalysisResult> analysisResult) {
         this.result = result;
-        loadData(result);
+        this.analysisResult = analysisResult;
+        loadData(result, analysisResult);
     }
 
     public JComponent getRootPanel() {
         return rootPanel;
     }
 
-    private void loadData(SQLEAuditResult result) {
+    private void loadData(SQLEAuditResult result, List<SQLESQLAnalysisResult> analysisResult) {
         auditLevel.setText(result.getAuditLevel());
         passRate.setText(String.valueOf(result.getPassRate()));
         score.setText(String.valueOf(result.getScore()));
@@ -57,6 +58,33 @@ public class SQLEAuditResultUI {
         tableJPanel.add(jTableHeader, BorderLayout.NORTH);
         tableJPanel.add(table, BorderLayout.CENTER);
 
+        JTable jTable = new JTable();
+        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        for (SQLESQLAnalysisResult sqlAnalysisResult : analysisResult) {
+            SQLExplain explain = sqlAnalysisResult.getSqlExplain();
+            List<TableMetaItemHeadResV1> headList = explain.getClassicResult().getHead();
+            String[] headNameList = new String[headList.size()];
+            for (int i = 0; i < headNameList.length; i++) {
+                headNameList[i] = headList.get(i).getFieldName();
+            }
+
+            model.setColumnIdentifiers(headNameList);
+
+            List<Map<String, String>> rowMapList = explain.getClassicResult().getRows();
+            for (int i = 0; i < rowMapList.size(); i++) {
+                Object[] item = new Object[headList.size()];
+                for (int j = 0; j < headList.size(); j++) {
+                    Object itemHtml = generateHtml(rowMapList.get(i).get(headList.get(j).getFieldName()));
+                    item[j] = itemHtml;
+                }
+                model.addRow(item);
+            }
+        }
+
+        JTableHeader jTableHeader1 = jTable.getTableHeader();
+        tableMetaDataJpanel.add(jTableHeader1, BorderLayout.NORTH);
+        tableMetaDataJpanel.add(jTable, BorderLayout.CENTER);
+        FitTableSize(jTable);
     }
 
     public void FitTableSize(JTable myTable) {
