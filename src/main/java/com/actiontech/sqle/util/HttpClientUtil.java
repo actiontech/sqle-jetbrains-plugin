@@ -1,9 +1,6 @@
 package com.actiontech.sqle.util;
 
-import com.actiontech.sqle.config.SQLEAuditResult;
-import com.actiontech.sqle.config.SQLEDataSourceNameListResult;
-import com.actiontech.sqle.config.SQLEProjectNameListResult;
-import com.actiontech.sqle.config.SQLESettings;
+import com.actiontech.sqle.config.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.HttpStatus;
@@ -14,6 +11,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -32,6 +30,8 @@ public class HttpClientUtil {
     private static final String dataSourcePath = "/v1/projects/%s/instances";
 
     private static final String schemaPath = "/v1/projects/%s/instances/%s/schemas";
+
+    private static final String sqlAnalysisPath = "/v1/sql_analysis";
 
     public HttpClientUtil(SQLESettings settings) {
         String protocol = "http://";
@@ -146,6 +146,29 @@ public class HttpClientUtil {
         }
 
         return list;
+    }
+
+    public List<SQLESQLAnalysisResult> GetSQLAnalysis(String sql, String projectName, String dataSourceName, String schemaName) throws Exception {
+        if (token == null || token.equals("")) {
+            Login();
+        }
+
+        String encodedSql = URLEncoder.encode(sql, StandardCharsets.UTF_8);
+        String reqPath = String.format("%s%s?project_name=%s&instance_name=%s&schema_name=%s&sql=%s", uriHead, sqlAnalysisPath, projectName, dataSourceName, schemaName, encodedSql);
+        JsonObject resp = sendGet(reqPath);
+
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("login failed: " + resp.get("message").getAsString());
+        }
+
+        JsonElement jsonObject = resp.get("data");
+
+        Type datasetListType = new TypeToken<Collection<SQLESQLAnalysisResult>>() {
+        }.getType();
+
+        Gson gson = new Gson();
+
+        return gson.fromJson(jsonObject, datasetListType);
     }
 
     public enum AuditType {
