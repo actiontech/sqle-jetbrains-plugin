@@ -3,6 +3,8 @@ package com.actiontech.sqle.from;
 import com.actiontech.sqle.config.*;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -117,6 +119,7 @@ public class SQLEAuditResultUI {
             public void mousePressed(MouseEvent event) {
                 if (event.getButton() == MouseEvent.BUTTON1) {
                     tableMetaDataJpanel.removeAll();
+                    tableMetaDataJpanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL分析"));
                     int row = table.rowAtPoint(event.getPoint());
                     if (row >= 0) {
                         JTable jTable = new JTable();
