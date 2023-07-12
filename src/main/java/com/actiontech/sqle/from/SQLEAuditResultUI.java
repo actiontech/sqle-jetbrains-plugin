@@ -5,6 +5,8 @@ import com.actiontech.sqle.config.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class SQLEAuditResultUI {
         this.result = result;
         this.analysisResult = analysisResult;
         loadData(result, analysisResult);
+        loadListener();
     }
 
     public JComponent getRootPanel() {
@@ -59,34 +62,6 @@ public class SQLEAuditResultUI {
         JTableHeader jTableHeader = table.getTableHeader();
         tableJPanel.add(jTableHeader, BorderLayout.NORTH);
         tableJPanel.add(table, BorderLayout.CENTER);
-
-        JTable jTable = new JTable();
-        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-        for (SQLESQLAnalysisResult sqlAnalysisResult : analysisResult) {
-            SQLExplain explain = sqlAnalysisResult.getSqlExplain();
-            List<TableMetaItemHeadResV1> headList = explain.getClassicResult().getHead();
-            String[] headNameList = new String[headList.size()];
-            for (int i = 0; i < headNameList.length; i++) {
-                headNameList[i] = headList.get(i).getFieldName();
-            }
-
-            model.setColumnIdentifiers(headNameList);
-
-            List<Map<String, String>> rowMapList = explain.getClassicResult().getRows();
-            for (int i = 0; i < rowMapList.size(); i++) {
-                Object[] item = new Object[headList.size()];
-                for (int j = 0; j < headList.size(); j++) {
-                    Object itemHtml = generateHtml(rowMapList.get(i).get(headList.get(j).getFieldName()));
-                    item[j] = itemHtml;
-                }
-                model.addRow(item);
-            }
-        }
-
-        JTableHeader jTableHeader1 = jTable.getTableHeader();
-        tableMetaDataJpanel.add(jTableHeader1, BorderLayout.NORTH);
-        tableMetaDataJpanel.add(jTable, BorderLayout.CENTER);
-        FitTableSize(jTable);
     }
 
     public void FitTableSize(JTable myTable) {
@@ -135,5 +110,45 @@ public class SQLEAuditResultUI {
         buffer.append(text.replaceAll("\n", "<br>"));
         buffer.append("</body></html>");
         return buffer.toString();
+    }
+
+    private void loadListener() {
+        table.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent event) {
+                if (event.getButton() == MouseEvent.BUTTON1) {
+                    tableMetaDataJpanel.removeAll();
+                    int row = table.rowAtPoint(event.getPoint());
+                    if (row >= 0) {
+                        JTable jTable = new JTable();
+                        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+
+                        SQLESQLAnalysisResult sqlAnalysisResult = analysisResult.get(row);
+                        SQLExplain explain = sqlAnalysisResult.getSqlExplain();
+                        List<TableMetaItemHeadResV1> headList = explain.getClassicResult().getHead();
+                        String[] headNameList = new String[headList.size()];
+                        for (int i = 0; i < headNameList.length; i++) {
+                            headNameList[i] = headList.get(i).getFieldName();
+                        }
+
+                        model.setColumnIdentifiers(headNameList);
+
+                        List<Map<String, String>> rowMapList = explain.getClassicResult().getRows();
+                        for (int i = 0; i < rowMapList.size(); i++) {
+                            Object[] item = new Object[headList.size()];
+                            for (int j = 0; j < headList.size(); j++) {
+                                Object itemHtml = generateHtml(rowMapList.get(i).get(headList.get(j).getFieldName()));
+                                item[j] = itemHtml;
+                            }
+                            model.addRow(item);
+                        }
+
+                        JTableHeader jTableHeader1 = jTable.getTableHeader();
+                        tableMetaDataJpanel.add(jTableHeader1, BorderLayout.NORTH);
+                        tableMetaDataJpanel.add(jTable, BorderLayout.CENTER);
+                        FitTableSize(jTable);
+                    }
+                }
+            }
+        });
     }
 }
