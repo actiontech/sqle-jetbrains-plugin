@@ -65,7 +65,7 @@ public class HttpClientUtil {
 
         JsonObject resp = sendGet(uriHead + driversPath);
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("get db type failed: " + resp.get("message").getAsString());
         }
         JsonArray array = resp.get("data").getAsJsonObject().get("driver_name_list").getAsJsonArray();
         ArrayList<String> list = new ArrayList<>();
@@ -83,7 +83,7 @@ public class HttpClientUtil {
         String reqPath = String.format("%s?page_index=%s&page_size=%s", projectPath, "1", "999999");
         JsonObject resp = sendGet(uriHead + reqPath);
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("get project name failed: " + resp.get("message").getAsString());
         }
 
         Gson gson = new Gson();
@@ -110,7 +110,7 @@ public class HttpClientUtil {
         JsonObject resp = sendGet(uriHead + reqPath);
 
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("get data source list failed: " + resp.get("message").getAsString());
         }
 
         Gson gson = new Gson();
@@ -136,7 +136,7 @@ public class HttpClientUtil {
         JsonObject resp = sendGet(uriHead + reqPath);
 
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("get schema name list: " + resp.get("message").getAsString());
         }
 
         JsonArray array = resp.get("data").getAsJsonObject().get("schema_name_list").getAsJsonArray();
@@ -158,7 +158,7 @@ public class HttpClientUtil {
         JsonObject resp = sendGet(reqPath);
 
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("get sql analysis failed: " + resp.get("message").getAsString());
         }
 
         JsonElement jsonObject = resp.get("data");
