@@ -138,7 +138,7 @@ public class SQLEAuditResultUI {
                     sqlDetailPanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL详情"));
 
                     sqlAuditResultPanel.removeAll();
-                    sqlAuditResultPanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL审核等级"));
+                    sqlAuditResultPanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL审核结果"));
 
                     int row = table.rowAtPoint(event.getPoint());
                     if (row >= 0) {
