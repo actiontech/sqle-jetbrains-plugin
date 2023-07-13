@@ -23,6 +23,8 @@ public class SQLEAuditResultUI {
     private JPanel titlePanel;
     private JPanel overviewPanel;
     private JPanel tableMetaDataJpanel;
+    private JPanel sqlDetailPanel;
+    private JPanel sqlAuditResultPanel;
     private SQLEAuditResult result;
 
     private List<SQLESQLAnalysisResult> analysisResult;
@@ -131,8 +133,38 @@ public class SQLEAuditResultUI {
                 if (event.getButton() == MouseEvent.BUTTON1) {
                     tableMetaDataJpanel.removeAll();
                     tableMetaDataJpanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL分析"));
+
+                    sqlDetailPanel.removeAll();
+                    sqlDetailPanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL详情"));
+
+                    sqlAuditResultPanel.removeAll();
+                    sqlAuditResultPanel.setBorder(new TitledBorder(new EtchedBorder(), "SQL审核等级"));
+
                     int row = table.rowAtPoint(event.getPoint());
                     if (row >= 0) {
+                        JTable sqlTable = new JTable();
+                        DefaultTableModel sqlTableModel = (DefaultTableModel) sqlTable.getModel();
+                        sqlTableModel.setColumnIdentifiers(new String[]{"SQL"});
+                        String sqlDetailHtml = generateHtml(result.getSQLResults().get(row).getExecSQL());
+                        sqlTableModel.addRow((new String[]{sqlDetailHtml}));
+                        JTableHeader sqlTableTableHeader = sqlTable.getTableHeader();
+                        sqlDetailPanel.add(sqlTableTableHeader, BorderLayout.NORTH);
+                        sqlDetailPanel.add(sqlTable, BorderLayout.CENTER);
+                        FitTableSize(sqlTable);
+
+                        // load sql audit result
+                        JTable sqlAuditResultTable = new JTable();
+                        DefaultTableModel sqlAuditResultTableModel = (DefaultTableModel) sqlAuditResultTable.getModel();
+                        sqlAuditResultTableModel.setColumnIdentifiers(new String[]{"审核结果"});
+                        List<SQLEAuditResultItem> sqlResults = result.getSQLResults();
+                        String auditResultHtml = generateHtml(sqlResults.get(row).getAuditResult());
+                        sqlAuditResultTableModel.addRow(new String[]{auditResultHtml});
+                        JTableHeader sqlAuditResultTableHeader = sqlAuditResultTable.getTableHeader();
+                        sqlAuditResultPanel.add(sqlAuditResultTableHeader, BorderLayout.NORTH);
+                        sqlAuditResultPanel.add(sqlAuditResultTable, BorderLayout.CENTER);
+                        FitTableSize(sqlAuditResultTable);
+
+
                         JTable jTable = new JTable();
                         DefaultTableModel model = (DefaultTableModel) jTable.getModel();
 
