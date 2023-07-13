@@ -70,7 +70,7 @@ public class SQLEAuditResultUI {
     }
 
     public void FitTableSize(JTable myTable) {
-        FitTableWidth(myTable);
+//        FitTableWidth(myTable);
         FitTableHeight(myTable);
     }
 
