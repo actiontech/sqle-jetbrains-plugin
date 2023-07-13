@@ -59,7 +59,7 @@ public class SQLEAuditResultUI {
             Object[] item = new Object[3];
             item[0] = generateHtml(String.valueOf(items.get(i).getNumber()));
             item[1] = generateHtml(items.get(i).getExecSQL());
-            item[2] = generateHtml(result.getAuditLevel());
+            item[2] = generateHtml(items.get(i).getAuditLevel());
             model.addRow(item);
         }
 
