@@ -158,12 +158,8 @@ public class HttpClientUtil {
         JsonObject resp = sendGet(reqPath);
 
         int code = resp.get("code").getAsInt();
-        // 8002 means community version not support sql analysis
-        if (code == 8002) {
-            return new LinkedList<>();
-        }
         if (code != 0) {
-            throw new Exception("get sql analysis failed: " + resp.get("message").getAsString());
+            return new LinkedList<>();
         }
 
         JsonElement jsonObject = resp.get("data");
