@@ -50,14 +50,14 @@ public class SQLEAuditResultUI {
         // load table
         ArrayList<SQLEAuditResultItem> items = result.getSQLResults();
 
-        String[] columnNames = {"序号", "审核SQL", "审核结果"};
+        String[] columnNames = {"序号", "审核SQL", "审核等级"};
         model.setColumnIdentifiers(columnNames);
 
         for (int i = 0; i < items.size(); i++) {
             Object[] item = new Object[3];
             item[0] = generateHtml(String.valueOf(items.get(i).getNumber()));
             item[1] = generateHtml(items.get(i).getExecSQL());
-            item[2] = generateHtml(items.get(i).getAuditResult());
+            item[2] = generateHtml(result.getAuditLevel());
             model.addRow(item);
         }
 
@@ -120,7 +120,7 @@ public class SQLEAuditResultUI {
             public void mouseMoved(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    table.setToolTipText("<html>" + "鼠标左击显示SQL分析内容" + "</html>");
+                    table.setToolTipText("<html>" + "鼠标左击显示审核详情" + "</html>");
                 } else {
                     table.setToolTipText("");
                 }
