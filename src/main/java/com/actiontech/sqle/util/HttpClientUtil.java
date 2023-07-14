@@ -3,6 +3,7 @@ package com.actiontech.sqle.util;
 import com.actiontech.sqle.config.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.intellij.openapi.diagnostic.Logger;
 import org.apache.http.HttpStatus;
 
 import java.io.BufferedReader;
@@ -16,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class HttpClientUtil {
+    private static final Logger LOG = Logger.getInstance(HttpClientUtil.class);
 
     private String uriHead;
     private String token;
@@ -158,7 +160,12 @@ public class HttpClientUtil {
         JsonObject resp = sendGet(reqPath);
 
         int code = resp.get("code").getAsInt();
+        if (code == 8002) {
+            LOG.warn("[sqlAnalysis]community version does not support sql analysis");
+            return new LinkedList<>();
+        }
         if (code != 0) {
+            LOG.warn("[sqlAnalysis]get sql analysis failed: " + resp.get("message").getAsString());
             return new LinkedList<>();
         }
 
