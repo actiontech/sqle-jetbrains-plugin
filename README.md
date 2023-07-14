@@ -63,14 +63,17 @@ JDK版本11,Gradle版本6.7.1
 
 #### 配置参数说明
 
-| 配置项 | 配置项说明 |
-| --- | --- |
-| SQLE Addr | SQLE 服务地址, 格式为 IP:Port |
-| http/https按钮 | 指定通过http的方式连接SQLE还是通过https的方式连接 |
-| UserName | 登录SQLE使用的用户名 |
-| Password | 登录SQLE使用的密码 |
-| Test Connection | 测试连接是否成功, 将会尝试登录 |
-| DB Type | 当其他配置正确时此下拉框会自动获取支持审核的实例类型, 选择后会使用此实例类型的审核规则进行审核 |
+| 配置项             | 配置项说明                                            |
+|-----------------|--------------------------------------------------|
+| SQLE Addr       | SQLE 服务地址, 格式为 IP:Port                           |
+| http/https按钮    | 指定通过http的方式连接SQLE还是通过https的方式连接                  |
+| UserName        | 登录SQLE使用的用户名                                     |
+| Password        | 登录SQLE使用的密码                                      |
+| Test Connection | 测试连接是否成功, 将会尝试登录                                 |
+| Project         | 项目名称                                             |
+| DB Type         | 当其他配置正确时此下拉框会自动获取支持审核的实例类型, 选择后会使用此实例类型的审核规则进行审核 |
+| Data Source     | 数据源名称                                            |
+| Schema          | 数据库名称                                            |
 
 ## 常见问题解答
 
@@ -84,7 +87,8 @@ JDK版本11,Gradle版本6.7.1
 
 #### 3. 我没有SQLE环境可以使用这个插件吗
 
-答: SQLE有演示环境, 如果只是想尝试一下这个插件可以连接 [演示环境](https://actiontech.github.io/sqle-docs-cn/0.overview/1_online_demo.html)
+答: SQLE有演示环境,
+如果只是想尝试一下这个插件可以连接 [演示环境](https://actiontech.github.io/sqle-docs-cn/0.overview/1_online_demo.html)
 
 #### 插件支持哪些IDE
 
