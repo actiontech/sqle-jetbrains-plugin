@@ -102,33 +102,35 @@ public class SQLEAuditResultUI {
         FitTableSize(sqlAuditResultTable);
 
 
-        JTable jTable = new JTable();
-        DefaultTableModel model = (DefaultTableModel) jTable.getModel();
+        if (analysisResult.size() > 0) {
+            JTable jTable = new JTable();
+            DefaultTableModel model = (DefaultTableModel) jTable.getModel();
 
-        SQLESQLAnalysisResult sqlAnalysisResult = analysisResult.get(row);
-        SQLExplain explain = sqlAnalysisResult.getSqlExplain();
-        List<TableMetaItemHeadResV1> headList = explain.getClassicResult().getHead();
-        String[] headNameList = new String[headList.size()];
-        for (int i = 0; i < headNameList.length; i++) {
-            headNameList[i] = headList.get(i).getFieldName();
-        }
-
-        model.setColumnIdentifiers(headNameList);
-
-        List<Map<String, String>> rowMapList = explain.getClassicResult().getRows();
-        for (int i = 0; i < rowMapList.size(); i++) {
-            Object[] item = new Object[headList.size()];
-            for (int j = 0; j < headList.size(); j++) {
-                Object itemHtml = generateHtml(rowMapList.get(i).get(headList.get(j).getFieldName()));
-                item[j] = itemHtml;
+            SQLESQLAnalysisResult sqlAnalysisResult = analysisResult.get(row);
+            SQLExplain explain = sqlAnalysisResult.getSqlExplain();
+            List<TableMetaItemHeadResV1> headList = explain.getClassicResult().getHead();
+            String[] headNameList = new String[headList.size()];
+            for (int i = 0; i < headNameList.length; i++) {
+                headNameList[i] = headList.get(i).getFieldName();
             }
-            model.addRow(item);
-        }
 
-        JTableHeader jTableHeader1 = jTable.getTableHeader();
-        tableMetaDataJpanel.add(jTableHeader1, BorderLayout.NORTH);
-        tableMetaDataJpanel.add(jTable, BorderLayout.CENTER);
-        FitTableSize(jTable);
+            model.setColumnIdentifiers(headNameList);
+
+            List<Map<String, String>> rowMapList = explain.getClassicResult().getRows();
+            for (int i = 0; i < rowMapList.size(); i++) {
+                Object[] item = new Object[headList.size()];
+                for (int j = 0; j < headList.size(); j++) {
+                    Object itemHtml = generateHtml(rowMapList.get(i).get(headList.get(j).getFieldName()));
+                    item[j] = itemHtml;
+                }
+                model.addRow(item);
+            }
+
+            JTableHeader jTableHeader1 = jTable.getTableHeader();
+            tableMetaDataJpanel.add(jTableHeader1, BorderLayout.NORTH);
+            tableMetaDataJpanel.add(jTable, BorderLayout.CENTER);
+            FitTableSize(jTable);
+        }
     }
 
     public void FitOverviewTableSize(JTable myTable) {
