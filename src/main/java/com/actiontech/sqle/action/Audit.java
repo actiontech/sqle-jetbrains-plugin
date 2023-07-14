@@ -19,17 +19,9 @@ import com.intellij.ui.content.ContentFactory;
 import java.util.List;
 
 public class Audit {
-
-    public static final String TOOL_WINDOW_NAME = "审核结果";
-
     public static void Audit(AnActionEvent e, String sql, HttpClientUtil.AuditType type) {
-        Project project = e.getData(LangDataKeys.PROJECT);
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        toolWindowManager.unregisterToolWindow(TOOL_WINDOW_NAME);
-
         SQLESettings settings = SQLESettings.getInstance();
 
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow(TOOL_WINDOW_NAME, true, ToolWindowAnchor.BOTTOM);
 
         HttpClientUtil client = new HttpClientUtil(settings);
         try {
@@ -41,6 +33,13 @@ public class Audit {
 
             List<SQLESQLAnalysisResult> analysisResult = client.GetSQLAnalysis(sql, projectName, dataSourceName, schemaName);
             SQLEAuditResultUI ui = new SQLEAuditResultUI(result, analysisResult);
+
+            Project project = e.getData(LangDataKeys.PROJECT);
+            ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
+
+            String title = String.format("审核结果(评分:%s)", result.getScore());
+            toolWindowManager.unregisterToolWindow(title);
+            ToolWindow toolWindow = toolWindowManager.registerToolWindow(title, true, ToolWindowAnchor.BOTTOM);
             createToolWindow(toolWindow, ui);
         } catch (Exception exception) {
             String errMessage = NotifyUtil.getExceptionMessage(exception);
