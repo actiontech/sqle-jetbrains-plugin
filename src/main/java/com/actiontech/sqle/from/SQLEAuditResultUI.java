@@ -15,13 +15,8 @@ import java.util.Map;
 
 public class SQLEAuditResultUI {
     private JPanel rootPanel;
-    private JLabel auditLevel;
-    private JLabel passRate;
-    private JLabel score;
     private JPanel tableJPanel;
     private JScrollPane scrollPane;
-    private JPanel titlePanel;
-    private JPanel overviewPanel;
     private JPanel tableMetaDataJpanel;
     private JPanel sqlDetailPanel;
     private JPanel sqlAuditResultPanel;
@@ -45,10 +40,6 @@ public class SQLEAuditResultUI {
     DefaultTableModel model = (DefaultTableModel) table.getModel();
 
     private void loadData(SQLEAuditResult result) {
-        auditLevel.setText(result.getAuditLevel());
-        passRate.setText(String.valueOf(result.getPassRate()));
-        score.setText(String.valueOf(result.getScore()));
-
         // load table
         ArrayList<SQLEAuditResultItem> items = result.getSQLResults();
 
