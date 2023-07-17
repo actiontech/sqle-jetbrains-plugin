@@ -25,11 +25,11 @@ public class Audit {
 
         HttpClientUtil client = new HttpClientUtil(settings);
         try {
-            SQLEAuditResult result = client.AuditSQL(sql, type);
-
             String projectName = settings.getProjectName();
             String dataSourceName = settings.getDataSourceName();
             String schemaName = settings.getSchemaName();
+
+            SQLEAuditResult result = client.AuditSQL(sql, type, projectName, dataSourceName, schemaName);
 
             List<SQLESQLAnalysisResult> analysisResult = client.GetSQLAnalysis(sql, projectName, dataSourceName, schemaName);
             SQLEAuditResultUI ui = new SQLEAuditResultUI(result, analysisResult);
