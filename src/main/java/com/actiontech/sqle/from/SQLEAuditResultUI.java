@@ -194,11 +194,13 @@ public class SQLEAuditResultUI {
 
     public String generateHtml(String text) {
         text = text.trim();
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("<html><body>");
-        buffer.append(text.replaceAll("\n", "<br>"));
-        buffer.append("</body></html>");
-        return buffer.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body>");
+        String s = text.replaceAll("\n", "<br>");
+        String s1 = s.replaceAll(" ", "&nbsp;");
+        sb.append(s1);
+        sb.append("</body></html>");
+        return sb.toString();
     }
 
     private void loadListener() {
