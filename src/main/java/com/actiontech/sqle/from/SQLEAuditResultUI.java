@@ -3,6 +3,7 @@ package com.actiontech.sqle.from;
 import com.actiontech.sqle.config.*;
 import com.actiontech.sqle.util.EllipsisRenderer;
 import com.actiontech.sqle.util.Util;
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -82,7 +83,8 @@ public class SQLEAuditResultUI {
         JTable sqlTable = new JTable();
         DefaultTableModel sqlTableModel = (DefaultTableModel) sqlTable.getModel();
         sqlTableModel.setColumnIdentifiers(new String[]{""});
-        String sqlDetailHtml = generateHtml(result.getSQLResults().get(row).getExecSQL());
+        String sqlDetail = SqlFormatter.format(result.getSQLResults().get(row).getExecSQL());
+        String sqlDetailHtml = generateHtml(sqlDetail);
         sqlTableModel.addRow((new String[]{sqlDetailHtml}));
         JTableHeader sqlTableTableHeader = sqlTable.getTableHeader();
         sqlDetailPanel.add(sqlTableTableHeader, BorderLayout.NORTH);
