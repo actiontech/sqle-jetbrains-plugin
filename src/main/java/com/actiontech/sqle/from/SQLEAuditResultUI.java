@@ -139,7 +139,7 @@ public class SQLEAuditResultUI {
     }
 
     public void FitTableSize(JTable myTable) {
-//        FitTableWidth(myTable);
+        FitTableWidth(myTable);
         FitTableHeight(myTable);
     }
 
@@ -152,6 +152,8 @@ public class SQLEAuditResultUI {
                 tableColumn.setMaxWidth(50); // 设置最大宽度
             } else if (column == 1) {
                 tableColumn.setCellRenderer(new EllipsisRenderer());
+                tableColumn.setMaxWidth(500);
+                tableColumn.setMinWidth(500);
             } else if (column == 2) {
                 tableColumn.setMinWidth(60); // 设置最小宽度
                 tableColumn.setMaxWidth(60); // 设置最大宽度
@@ -170,26 +172,32 @@ public class SQLEAuditResultUI {
         }
     }
 
-    public void FitTableWidth(JTable myTable) {
-        final TableColumnModel columnModel = myTable.getColumnModel();
-        for (int column = 0; column < myTable.getColumnCount(); column++) {
-            int width = myTable.getTableHeader().getColumnModel().getColumn(column).getWidth();
-            for (int row = 0; row < myTable.getRowCount(); row++) {
-                TableCellRenderer renderer = myTable.getCellRenderer(row, column);
-                Component comp = myTable.prepareRenderer(renderer, row, column);
-                width = Math.max(comp.getPreferredSize().width, width);
-            }
-
-            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-            if (column == 0) {
-                r.setHorizontalAlignment(JLabel.CENTER);
-                columnModel.getColumn(column).setCellRenderer(r);
-            } else {
-                width += myTable.getFont().getSize() + myTable.getIntercellSpacing().getWidth();
-            }
-
-            columnModel.getColumn(column).setPreferredWidth(width);
+    public void FitTableWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            TableColumn tableColumn = columnModel.getColumn(column);
+            tableColumn.setMinWidth(1000);
+            tableColumn.setMaxWidth(1000);
         }
+//        final TableColumnModel columnModel = myTable.getColumnModel();
+//        for (int column = 0; column < myTable.getColumnCount(); column++) {
+//            int width = myTable.getTableHeader().getColumnModel().getColumn(column).getWidth();
+//            for (int row = 0; row < myTable.getRowCount(); row++) {
+//                TableCellRenderer renderer = myTable.getCellRenderer(row, column);
+//                Component comp = myTable.prepareRenderer(renderer, row, column);
+//                width = Math.max(comp.getPreferredSize().width, width);
+//            }
+//
+//            DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+//            if (column == 0) {
+//                r.setHorizontalAlignment(JLabel.CENTER);
+//                columnModel.getColumn(column).setCellRenderer(r);
+//            } else {
+//                width += myTable.getFont().getSize() + myTable.getIntercellSpacing().getWidth();
+//            }
+//
+//            columnModel.getColumn(column).setPreferredWidth(width);
+//        }
     }
 
     public String generateHtml(String text) {
