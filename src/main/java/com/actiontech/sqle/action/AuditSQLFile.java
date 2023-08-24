@@ -30,7 +30,8 @@ public class AuditSQLFile extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        String text = Objects.requireNonNull(file.getViewProvider().getDocument()).getText();
-        Audit.Audit(e, text, HttpClientUtil.AuditType.SQL);
+        String[] texts={""};
+        texts[0] = Objects.requireNonNull(file.getViewProvider().getDocument()).getText();
+        Audit.Audit(e, texts, HttpClientUtil.AuditType.SQL);
     }
 }

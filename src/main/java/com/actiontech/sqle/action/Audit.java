@@ -19,7 +19,7 @@ import com.intellij.ui.content.ContentFactory;
 import java.util.List;
 
 public class Audit {
-    public static void Audit(AnActionEvent e, String sql, HttpClientUtil.AuditType type) {
+    public static void Audit(AnActionEvent e, String[] contents, HttpClientUtil.AuditType type) {
         SQLESettings settings = SQLESettings.getInstance();
 
 
@@ -29,9 +29,9 @@ public class Audit {
             String dataSourceName = settings.getDataSourceName();
             String schemaName = settings.getSchemaName();
 
-            SQLEAuditResult result = client.AuditSQL(sql, type, projectName, dataSourceName, schemaName);
+            SQLEAuditResult result = client.AuditSQL(contents, type, projectName, dataSourceName, schemaName);
 
-            List<SQLESQLAnalysisResult> analysisResult = client.GetSQLAnalysis(sql, projectName, dataSourceName, schemaName);
+            List<SQLESQLAnalysisResult> analysisResult = client.GetSQLAnalysis(contents[0], projectName, dataSourceName, schemaName);
             SQLEAuditResultUI ui = new SQLEAuditResultUI(result, analysisResult);
 
             Project project = e.getData(LangDataKeys.PROJECT);

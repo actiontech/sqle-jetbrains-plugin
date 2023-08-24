@@ -28,7 +28,8 @@ public class AuditEditor extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         // 获取鼠标选中的文本
-        String selectedText = e.getRequiredData(CommonDataKeys.EDITOR).getSelectionModel().getSelectedText();
-        Audit.Audit(e, selectedText, HttpClientUtil.AuditType.SQL);
+        String[] selectedTexts={""};
+        selectedTexts[0] = e.getRequiredData(CommonDataKeys.EDITOR).getSelectionModel().getSelectedText();
+        Audit.Audit(e,selectedTexts, HttpClientUtil.AuditType.SQL);
     }
 }

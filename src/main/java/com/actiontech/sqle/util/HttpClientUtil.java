@@ -24,7 +24,7 @@ public class HttpClientUtil {
     private SQLESettings settings;
 
     private static final String loginPath = "/v1/login";
-    private static final String auditPath = "/v1/sql_audit";
+    private static final String auditPath = "/v1/audit_files";
     private static final String driversPath = "/v1/configurations/drivers";
 
     private static final String projectPath = "/v1/projects";
@@ -183,14 +183,14 @@ public class HttpClientUtil {
         SQL, MyBatis;
     }
 
-    public SQLEAuditResult AuditSQL(String sql, AuditType type, String projectName, String instanceName, String schemaName) throws Exception {
+    public SQLEAuditResult AuditSQL(String[] contents, AuditType type, String projectName, String instanceName, String schemaName) throws Exception {
         if (token == null || token.equals("")) {
             Login();
         }
 
-        Map<String, String> req = new HashMap<>();
+        Map<String, Object> req = new HashMap<>();
         req.put("instance_type", settings.getDBType());
-        req.put("sql_content", sql);
+        req.put("file_contents", contents);
         req.put("project_name", projectName);
         req.put("instance_name", instanceName);
         req.put("schema_name", schemaName);
