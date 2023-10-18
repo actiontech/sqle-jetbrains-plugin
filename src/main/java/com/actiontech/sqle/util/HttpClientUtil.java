@@ -24,8 +24,12 @@ public class HttpClientUtil {
     private SQLESettings settings;
 
     private static final String loginPath = "/v1/login";
-    private static final String auditPath = "/v1/audit_files";
+    private static final String auditPath = "/v2/audit_files";
     private static final String driversPath = "/v1/configurations/drivers";
+
+    private static final String ruleKnowledgePath = "/v1/rule_knowledge/db_types/%s/rules/%s/";
+
+    private static final String customRuleKnowledgePath = "/v1/rule_knowledge/db_types/%s/custom_rules/%s/";
 
     private static final String projectPath = "/v1/projects";
 
@@ -215,6 +219,60 @@ public class HttpClientUtil {
         return gson.fromJson(data, new SQLEAuditResult().getClass());
     }
 
+    public String GetRuleKnowledge(String projectName, String ruleName) throws Exception {
+        if (token == null || token.isEmpty()) {
+            Login();
+        }
+
+        String knowledge = GetOriginRuleKnowledge(projectName, ruleName);
+        if (knowledge == null) {
+            knowledge = GetCustomRuleKnowledge(projectName, ruleName);
+        }
+
+        if (null == knowledge || knowledge.isEmpty()) {
+            knowledge = "知识库获取失败或该规则未配置知识库";
+        }
+
+        return knowledge;
+    }
+
+    public String GetOriginRuleKnowledge(String projectName, String ruleName) throws Exception {
+        if (token == null || token.isEmpty()) {
+            Login();
+        }
+
+        String reqPath = String.format(ruleKnowledgePath, projectName, ruleName);
+        JsonObject resp = sendGet(uriHead + reqPath);
+        if (resp.get("code").getAsInt() == 8003) {
+            return "SQLE社区版不支持查看规则知识库";
+        }
+
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("get rule knowledge failed: " + resp.get("message").getAsString());
+        }
+
+        JsonObject data = resp.get("data").getAsJsonObject();
+        return data.get("knowledge_content").getAsString();
+    }
+
+    public String GetCustomRuleKnowledge(String projectName, String ruleName) throws Exception {
+        if (token == null || token.isEmpty()) {
+            Login();
+        }
+
+        String reqPath = String.format(customRuleKnowledgePath, projectName, ruleName);
+        JsonObject resp = sendGet(uriHead + reqPath);
+        if (resp.get("code").getAsInt() == 8003) {
+            return "SQLE社区版不支持查看规则知识库";
+        }
+        if (resp.get("code").getAsInt() != 0) {
+            throw new Exception("get rule knowledge failed: " + resp.get("message").getAsString());
+        }
+
+        JsonObject data = resp.get("data").getAsJsonObject();
+        return data.get("knowledge_content").getAsString();
+    }
+
     private JsonObject sendGet(String path) throws Exception {
         URL url = new URL(path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -255,8 +313,7 @@ public class HttpClientUtil {
         wr.flush();
         wr.close();
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
