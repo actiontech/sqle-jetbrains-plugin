@@ -23,6 +23,7 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.2")
     implementation("com.github.vertical-blank:sql-formatter:2.0.4")
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
+    implementation("com.vladsch.flexmark:flexmark-all:0.64.8")
 }
 
 setupDependencies {

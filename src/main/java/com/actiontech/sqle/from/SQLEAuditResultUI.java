@@ -3,6 +3,8 @@ package com.actiontech.sqle.from;
 import com.actiontech.sqle.config.*;
 import com.actiontech.sqle.util.*;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -11,10 +13,8 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class SQLEAuditResultUI {
     private JPanel rootPanel;
@@ -286,13 +286,20 @@ public class SQLEAuditResultUI {
                             throw new RuntimeException(ex);
                         }
 
+                        Parser parser = Parser.builder().build();
+                        HtmlRenderer renderer = HtmlRenderer.builder().build();
+                        String htmlContent = renderer.render(parser.parse(knowledge));
+
                         NewWindow newWindow = new NewWindow();
-                        JLabel label = new JLabel(generateHtml(knowledge));
 
-                        label.setVerticalAlignment(JLabel.TOP);
-                        label.setHorizontalAlignment(JLabel.LEFT);
+                        JEditorPane editorPane = new JEditorPane();
+                        editorPane.setContentType("text/html");
+                        editorPane.setEditable(false);
+                        String content = "<html><body>" + htmlContent + "</body></html>";
+                        editorPane.setText(content);
+                        newWindow.add(editorPane);
 
-                        JScrollPane scrollPane = new JScrollPane(label);
+                        JScrollPane scrollPane = new JScrollPane(editorPane);
 
                         newWindow.setContentPane(scrollPane);
                         newWindow.setVisible(true);
