@@ -21,14 +21,6 @@ JDK版本11,Gradle版本6.7.1
 1. 点击 [File] - [settings] - [Plugins] 安装
 ![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/1f6e99de-fb86-411e-879e-6a6159966c47)
 
-### 升级插件
-
-1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件,重启IDE
-   ![20231102172653_rec_-convert](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/7039da9d-3bc6-4a95-9123-6bb0c38cc802)
-   
-2. 安装新版本插件 
-
-
 ### 配置插件
 1. 点击 [File] - [Settings] 进入设置界面,点击左侧菜单最下方[SQLE], 填写SQLE环境信息, 点击 [OK] 保存
 
@@ -68,6 +60,12 @@ JDK版本11,Gradle版本6.7.1
 
 ![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/b7b6a6e1-0857-42bd-9274-b56fb8448ca3)
 
+### 升级插件
+
+1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件,重启IDE
+   ![20231102172653_rec_-convert](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/7039da9d-3bc6-4a95-9123-6bb0c38cc802)
+   
+2. 安装新版本插件 
 
 ## 常见问题解答
 
