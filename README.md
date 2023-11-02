@@ -79,6 +79,6 @@ JDK版本11,Gradle版本6.7.1
 
 答: SQLE有演示环境,如果只是想尝试一下这个插件可以连接 [演示环境](https://actiontech.github.io/sqle-docs-cn/0.overview/1_online_demo.html)
 
-#### 插件支持哪些IDE
+#### 4. 插件支持哪些IDE
 
 答: Jetbrains家的所有软件都是支持的
