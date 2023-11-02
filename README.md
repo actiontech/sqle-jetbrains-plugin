@@ -19,12 +19,13 @@ JDK版本11,Gradle版本6.7.1
 ### 安装插件
 
 1. 点击 [File] - [settings] - [Plugins] 安装
-![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/1f6e99de-fb86-411e-879e-6a6159966c47)
+![安装](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/3ed5d4b1-b47d-4234-95b1-ff812bfa2d46)
+
 
 ### 配置插件
 1. 点击 [File] - [Settings] 进入设置界面,点击左侧菜单最下方[SQLE], 填写SQLE环境信息, 点击 [OK] 保存
+![配置](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/d7d86b4c-40d8-46f0-8ac3-3b67d103aa89)
 
-![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/99403440-fd98-4b4b-a6c1-d2a0077e74e7)
 
 2. 配置参数说明
 
@@ -43,18 +44,15 @@ JDK版本11,Gradle版本6.7.1
 ### 使用插件
 1. 选中需要审核的SQL, 可以同时选中多条SQL.点击右键, 选中 [SQLE] - [Audit] , 也可以使用快捷键 [Ctrl] + [Shift] + [H], 插件会以弹窗的形式将审核结果进行展示
 
-![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/87b387bd-7c45-40a9-9683-135e065facb0)
-
+![审核sqls](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/81e2f550-8ed3-452c-94ea-0b91fea425e4)
 
 2. 审核mybatis xml文件,选中mybatis xml文件,鼠标右击点击 MyBatis Audit
 
-![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/05ca47bd-c6c8-41c2-b685-1952ba701212)
-
+![审核xml](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/ba9d658e-224b-4693-a87a-3d1c739ed173)
 
 3. 审核sql文件,选中sql文件,鼠标右击点击 SQL file Audit
 
-![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/4bb427a9-d209-475b-b000-cec75a07abba)
-
+![审核sql文件](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/0b07a060-7628-4540-b314-e12bcb8ab0d3)
 
 4. 审核结果解读
 
