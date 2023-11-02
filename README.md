@@ -40,7 +40,7 @@ JDK版本11,Gradle版本6.7.1
 | Data Source     | 数据源名称                                            |
 | Schema          | 数据库名称                                            |
 
-###使用插件
+### 使用插件
 1. 选中需要审核的SQL, 可以同时选中多条SQL.点击右键, 选中 [SQLE] - [Audit] , 也可以使用快捷键 [Ctrl] + [Shift] + [H], 插件会以弹窗的形式将审核结果进行展示
 
 ![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/87b387bd-7c45-40a9-9683-135e065facb0)
