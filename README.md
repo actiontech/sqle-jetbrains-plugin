@@ -16,52 +16,22 @@ JDK版本11,Gradle版本6.7.1
 
 [插件下载地址](https://github.com/actiontech/sqle-jetbrains-plugin/releases)
 
-### 安装说明
+### 安装插件
 
-将插件拖放到 IDEA 或 其他类似软件中(如Goland), 插件即可完成自动安装
+1. 点击 [File] - [settings] - [Plugins] 安装
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/1f6e99de-fb86-411e-879e-6a6159966c47)
 
-也可以在 [File] - [settings] - [Plugins] 中手动安装
-![img.png](doc_image/install_plugin.png)
-
-### 插件升级说明
+### 升级插件
 
 1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件
    ![img.png](doc_image/remove_plugin.png)
-2. 安装新版插件
 
-   略
+### 配置插件
+1. 点击 [File] - [Settings] 进入设置界面,点击左侧菜单最下方[SQLE], 填写SQLE环境信息, 点击 [OK] 保存
 
-### 使用说明
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/99403440-fd98-4b4b-a6c1-d2a0077e74e7)
 
-#### 配置插件
-
-1. 点击 [File] - [Settings] 进入设置界面
-
-   ![进入设置界面](doc_image/enter_setting.png)
-
-2. 在左侧菜单最下方应该有一项 [SQLE], 点击进入
-
-   ![进入SQLE插件设置](doc_image/enter_sqle_setting.png)
-
-3. 填写SQLE环境信息, 详细参数说明见下方参数说明, 点击 [OK] 保存
-
-   ![保存配置](doc_image/configure_sqle_setting.png)
-
-#### 使用插件
-
-1. 选中需要审核的SQL, 可以同时选中多条SQL
-
-   ![选中需要审核的SQL](doc_image/select_sql.png)
-
-2. 点击右键, 选中 [SQLE] - [Audit] , 也可以使用快捷键 [Ctrl] + [Shift] + [H]
-
-   ![点击审核](doc_image/click_audit.png)
-
-3. 插件会以弹窗的形式将审核结果进行展示
-
-   ![展示审核结果](doc_image/view_audit_result.png)
-
-#### 配置参数说明
+2. 配置参数说明
 
 | 配置项             | 配置项说明                                            |
 |-----------------|--------------------------------------------------|
@@ -75,6 +45,27 @@ JDK版本11,Gradle版本6.7.1
 | Data Source     | 数据源名称                                            |
 | Schema          | 数据库名称                                            |
 
+###使用插件
+1. 选中需要审核的SQL, 可以同时选中多条SQL.点击右键, 选中 [SQLE] - [Audit] , 也可以使用快捷键 [Ctrl] + [Shift] + [H], 插件会以弹窗的形式将审核结果进行展示
+
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/87b387bd-7c45-40a9-9683-135e065facb0)
+
+
+2. 审核mybatis xml文件,选中mybatis xml文件,鼠标右击点击 MyBatis Audit
+
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/05ca47bd-c6c8-41c2-b685-1952ba701212)
+
+
+3. 审核sql文件,选中sql文件,鼠标右击点击 SQL file Audit
+
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/4bb427a9-d209-475b-b000-cec75a07abba)
+
+
+4. 审核结果解读
+
+![image](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/b7b6a6e1-0857-42bd-9274-b56fb8448ca3)
+
+
 ## 常见问题解答
 
 #### 1. 为什么插件配置项中的 [DB Type] 点击时偶尔会卡一下
@@ -87,9 +78,8 @@ JDK版本11,Gradle版本6.7.1
 
 #### 3. 我没有SQLE环境可以使用这个插件吗
 
-答: SQLE有演示环境,
-如果只是想尝试一下这个插件可以连接 [演示环境](https://actiontech.github.io/sqle-docs-cn/0.overview/1_online_demo.html)
+答: SQLE有演示环境,如果只是想尝试一下这个插件可以连接 [演示环境](https://actiontech.github.io/sqle-docs-cn/0.overview/1_online_demo.html)
 
 #### 插件支持哪些IDE
 
-答: Jetbrains家的所有软件和 [Android Studio] 都是支持的
+答: Jetbrains家的所有软件都是支持的
