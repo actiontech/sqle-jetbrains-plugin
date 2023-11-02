@@ -1,4 +1,4 @@
-# SQLE-Jetbrains-Plugin
+![20231102172653_rec_-convert](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/55979853-8fe0-4304-8658-9ca88a12ba5d)# SQLE-Jetbrains-Plugin
 
 ## 简介
 
@@ -23,8 +23,11 @@ JDK版本11,Gradle版本6.7.1
 
 ### 升级插件
 
-1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件
-   ![img.png](doc_image/remove_plugin.png)
+1. 在 [File] - [settings] - [Plugins] 中卸载旧版插件,重启IDE
+   ![20231102172653_rec_-convert](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/7039da9d-3bc6-4a95-9123-6bb0c38cc802)
+   
+2. 安装新版本插件 
+
 
 ### 配置插件
 1. 点击 [File] - [Settings] 进入设置界面,点击左侧菜单最下方[SQLE], 填写SQLE环境信息, 点击 [OK] 保存
