@@ -1,4 +1,4 @@
-![20231102172653_rec_-convert](https://github.com/actiontech/sqle-jetbrains-plugin/assets/63177450/55979853-8fe0-4304-8658-9ca88a12ba5d)# SQLE-Jetbrains-Plugin
+# SQLE-Jetbrains-Plugin
 
 ## 简介
 
