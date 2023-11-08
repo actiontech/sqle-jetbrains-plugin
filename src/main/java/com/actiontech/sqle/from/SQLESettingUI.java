@@ -115,11 +115,7 @@ public class SQLESettingUI {
             @Override
             protected void textChanged(@NotNull DocumentEvent e) {
                 String passwordContent = new String(sqlePassword.getPassword());
-                if (StringUtils.containsAny(NOT_SUPPORT_CHARACTER, passwordContent)) {
-                    NotifyUtil.showNotifyPopup(sqlePassword, "Your password have special symbol, please use file config, or explain will not be used in analysis");
-                } else {
-                    settings.setPassword(passwordContent);
-                }
+                settings.setPassword(passwordContent);
             }
         });
 
