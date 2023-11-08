@@ -219,14 +219,14 @@ public class HttpClientUtil {
         return gson.fromJson(data, new SQLEAuditResult().getClass());
     }
 
-    public String GetRuleKnowledge(String projectName, String ruleName) throws Exception {
+    public String GetRuleKnowledge(String dbType, String ruleName) throws Exception {
         if (token == null || token.isEmpty()) {
             Login();
         }
 
-        String knowledge = GetOriginRuleKnowledge(projectName, ruleName);
+        String knowledge = GetOriginRuleKnowledge(dbType, ruleName);
         if (knowledge == null) {
-            knowledge = GetCustomRuleKnowledge(projectName, ruleName);
+            knowledge = GetCustomRuleKnowledge(dbType, ruleName);
         }
 
         if (null == knowledge || knowledge.isEmpty()) {
@@ -236,12 +236,12 @@ public class HttpClientUtil {
         return knowledge;
     }
 
-    public String GetOriginRuleKnowledge(String projectName, String ruleName) throws Exception {
+    public String GetOriginRuleKnowledge(String dbType, String ruleName) throws Exception {
         if (token == null || token.isEmpty()) {
             Login();
         }
 
-        String reqPath = String.format(ruleKnowledgePath, projectName, ruleName);
+        String reqPath = String.format(ruleKnowledgePath, dbType, ruleName);
         JsonObject resp = sendGet(uriHead + reqPath);
         if (resp.get("code").getAsInt() == 8003) {
             return "SQLE社区版不支持查看规则知识库";
@@ -255,12 +255,12 @@ public class HttpClientUtil {
         return data.get("knowledge_content").getAsString();
     }
 
-    public String GetCustomRuleKnowledge(String projectName, String ruleName) throws Exception {
+    public String GetCustomRuleKnowledge(String dbType, String ruleName) throws Exception {
         if (token == null || token.isEmpty()) {
             Login();
         }
 
-        String reqPath = String.format(customRuleKnowledgePath, projectName, ruleName);
+        String reqPath = String.format(customRuleKnowledgePath, dbType, ruleName);
         JsonObject resp = sendGet(uriHead + reqPath);
         if (resp.get("code").getAsInt() == 8003) {
             return "SQLE社区版不支持查看规则知识库";
