@@ -112,7 +112,8 @@ public class HttpClientUtil {
         }
 
         String dataSourcePath = String.format(HttpClientUtil.dataSourcePath, projectName);
-        String reqPath = String.format("%s?filter_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, dbType, "1", "999999");
+        String encodedDbType = URLEncoder.encode(dbType, "UTF-8");
+        String reqPath = String.format("%s?filter_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, encodedDbType, "1", "999999");
         JsonObject resp = sendGet(uriHead + reqPath);
 
         if (resp.get("code").getAsInt() != 0) {
@@ -224,9 +225,12 @@ public class HttpClientUtil {
             Login();
         }
 
-        String knowledge = GetOriginRuleKnowledge(dbType, ruleName);
+        // sqle服务端默认只能解析%20表示的空格
+        // 注意:java 的 URLEncoder.encode 方法默认将空格转换为+号
+        String encodeDbType = dbType.replace(" ", "%20");
+        String knowledge = GetOriginRuleKnowledge(encodeDbType, ruleName);
         if (knowledge == null) {
-            knowledge = GetCustomRuleKnowledge(dbType, ruleName);
+            knowledge = GetCustomRuleKnowledge(encodeDbType, ruleName);
         }
 
         if (null == knowledge || knowledge.isEmpty()) {
