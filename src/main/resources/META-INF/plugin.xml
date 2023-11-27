@@ -20,6 +20,10 @@
                 id="InstName"
                 implementation="com.actiontech.sqle.config.InstStatusBarWidgetFactory"
                 order="before positionWidget, before Position"/>
+        <statusBarWidgetFactory
+                id="SchemaName"
+                implementation="com.actiontech.sqle.config.SchemaStatusBarWidgetFactory"
+                order="before positionWidget, before Position"/>
     </extensions>
 
     <actions>
