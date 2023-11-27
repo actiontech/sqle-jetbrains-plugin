@@ -6,16 +6,18 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Observable;
+
 @Data
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @State(name = "SQLESettings", storages = {@Storage(file = "$APP_CONFIG$/SQLESettings.xml")})
-public class SQLESettings implements PersistentStateComponent<SQLESettings> {
-
-
+public class SQLESettings extends Observable implements PersistentStateComponent<SQLESettings> {
     private String SQLEAddr;
     private boolean EnableHttps;
     private String UserName;
@@ -39,5 +41,17 @@ public class SQLESettings implements PersistentStateComponent<SQLESettings> {
     @Override
     public void loadState(@NotNull SQLESettings state) {
         XmlSerializerUtil.copyBean(state, this);
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.DataSourceName = dataSourceName;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.SchemaName = schemaName;
+        setChanged();
+        notifyObservers();
     }
 }

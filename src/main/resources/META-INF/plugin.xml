@@ -24,6 +24,7 @@
                 id="SchemaName"
                 implementation="com.actiontech.sqle.config.SchemaStatusBarWidgetFactory"
                 order="before positionWidget, before Position"/>
+        <postStartupActivity implementation="com.actiontech.sqle.config.StartupAct"/>
     </extensions>
 
     <actions>
