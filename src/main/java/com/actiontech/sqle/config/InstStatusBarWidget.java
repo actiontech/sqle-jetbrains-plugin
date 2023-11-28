@@ -39,7 +39,7 @@ public class InstStatusBarWidget extends EditorBasedStatusBarPopup implements Ob
 
     @Override
     protected @NotNull WidgetState getWidgetState(@Nullable VirtualFile file) {
-        String tips = "数据源";
+        String tips = "配置SQLE数据源";
         if (null != SQLESettingUI.settings && !Strings.isEmpty(SQLESettingUI.settings.getDataSourceName())) {
             return new WidgetState(tips, SQLESettingUI.settings.getDataSourceName(), true);
         } else {

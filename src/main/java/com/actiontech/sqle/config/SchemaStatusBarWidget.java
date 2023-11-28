@@ -39,7 +39,7 @@ public class SchemaStatusBarWidget extends EditorBasedStatusBarPopup implements 
 
     @Override
     protected @NotNull EditorBasedStatusBarPopup.WidgetState getWidgetState(@Nullable VirtualFile file) {
-        String tips = "数据库";
+        String tips = "配置SQLE数据源SCHEMA";
         if (null != SQLESettingUI.settings && !Strings.isEmpty(SQLESettingUI.settings.getSchemaName())) {
             return new EditorBasedStatusBarPopup.WidgetState(tips, SQLESettingUI.settings.getSchemaName(), true);
         } else {
@@ -108,7 +108,7 @@ public class SchemaStatusBarWidget extends EditorBasedStatusBarPopup implements 
         }
 
         public schemaList(List<String> files) {
-            super("数据库", files);
+            super("SCHEMA", files);
         }
     }
 }
