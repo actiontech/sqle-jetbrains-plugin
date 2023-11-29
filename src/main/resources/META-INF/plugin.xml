@@ -16,6 +16,15 @@
         <applicationService serviceInterface="com.actiontech.sqle.config.SQLESettings"
                             serviceImplementation="com.actiontech.sqle.config.SQLESettings"/>
         <applicationConfigurable instance="com.actiontech.sqle.config.SQLEConfigurable"/>
+        <statusBarWidgetFactory
+                id="InstName"
+                implementation="com.actiontech.sqle.config.InstStatusBarWidgetFactory"
+                order="before positionWidget, before Position"/>
+        <statusBarWidgetFactory
+                id="SchemaName"
+                implementation="com.actiontech.sqle.config.SchemaStatusBarWidgetFactory"
+                order="before positionWidget, before Position"/>
+        <postStartupActivity implementation="com.actiontech.sqle.config.StartupAct"/>
     </extensions>
 
     <actions>

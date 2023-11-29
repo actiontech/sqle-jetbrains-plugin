@@ -1,11 +1,14 @@
 package com.actiontech.sqle.from;
 
+import com.actiontech.sqle.config.InstStatusBarWidget;
 import com.actiontech.sqle.config.SQLESettings;
+import com.actiontech.sqle.config.SchemaStatusBarWidget;
 import com.actiontech.sqle.util.HttpClientUtil;
 import com.actiontech.sqle.util.NotifyUtil;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.DocumentAdapter;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,11 +17,10 @@ import javax.swing.event.DocumentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.Observable;
 
-import static com.actiontech.sqle.constant.Constant.*;
 
-
-public class SQLESettingUI {
+public class SQLESettingUI extends Observable {
     private JPanel rootPanel;
     private JTextField sqleAddr;
     private JTextField sqleUserName;
@@ -30,7 +32,7 @@ public class SQLESettingUI {
     private JComboBox projectBox;
     private JComboBox dbDataSourceBox;
     private JComboBox SchemaBox;
-    private final SQLESettings settings;
+    public static SQLESettings settings;
 
     public SQLESettingUI(SQLESettings settings) {
         this.settings = settings;
@@ -98,6 +100,13 @@ public class SQLESettingUI {
     }
 
     private void loadListener() {
+        Project project = ProjectManager.getInstance().getDefaultProject();
+        InstStatusBarWidget instSchemaStatusBarWidget = new InstStatusBarWidget(project);
+        settings.addObserver(instSchemaStatusBarWidget);
+
+        SchemaStatusBarWidget schemaStatusBarWidget = new SchemaStatusBarWidget(project);
+        settings.addObserver(schemaStatusBarWidget);
+
         // text field
         sqleAddr.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
