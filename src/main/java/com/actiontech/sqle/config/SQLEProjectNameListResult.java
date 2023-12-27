@@ -7,6 +7,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class SQLEProjectNameListResult {
+    @SerializedName("uid")
+    private String UID;
+
     @SerializedName("name")
     private String Name;
 }
