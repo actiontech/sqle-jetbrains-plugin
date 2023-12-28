@@ -17,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
 
@@ -89,14 +90,7 @@ public class SQLESettingUI extends Observable {
         String dataSourceName = (String) dbDataSourceBox.getSelectedItem();
         String schemaName = (String) SchemaBox.getSelectedItem();
 
-        return !sqleAddr.getText().equals(ObjectUtils.defaultIfNull(settings.getSQLEAddr(), "")) ||
-                (httpsBtn.isSelected() != settings.isEnableHttps()) ||
-                !sqleUserName.getText().equals(ObjectUtils.defaultIfNull(settings.getUserName(), "")) ||
-                !(new String(sqlePassword.getPassword())).equals(ObjectUtils.defaultIfNull(settings.getPassword(), "")) ||
-                !ObjectUtils.defaultIfNull(dbType, "").equals(settings.getDBType()) ||
-                !ObjectUtils.defaultIfNull(projectName, "").equals(settings.getProjectName()) ||
-                !ObjectUtils.defaultIfNull(dataSourceName, "").equals(settings.getDataSourceName()) ||
-                !ObjectUtils.defaultIfNull(schemaName, "").equals(settings.getSchemaName());
+        return !sqleAddr.getText().equals(ObjectUtils.defaultIfNull(settings.getSQLEAddr(), "")) || (httpsBtn.isSelected() != settings.isEnableHttps()) || !sqleUserName.getText().equals(ObjectUtils.defaultIfNull(settings.getUserName(), "")) || !(new String(sqlePassword.getPassword())).equals(ObjectUtils.defaultIfNull(settings.getPassword(), "")) || !ObjectUtils.defaultIfNull(dbType, "").equals(settings.getDBType()) || !ObjectUtils.defaultIfNull(projectName, "").equals(settings.getProjectName()) || !ObjectUtils.defaultIfNull(dataSourceName, "").equals(settings.getDataSourceName()) || !ObjectUtils.defaultIfNull(schemaName, "").equals(settings.getSchemaName());
     }
 
     private void loadListener() {
@@ -152,28 +146,30 @@ public class SQLESettingUI extends Observable {
         projectBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (sqleAddr.getText().equals("") ||
-                        sqleUserName.getText().equals("") ||
-                        new String(sqlePassword.getPassword()).equals("")) {
+                if (sqleAddr.getText().equals("") || sqleUserName.getText().equals("") || new String(sqlePassword.getPassword()).equals("")) {
                     return;
                 }
 
                 Object selected = projectBox.getSelectedItem();
-                String selectedItem = "";
+                String selectedItem;
                 if (selected != null) {
                     selectedItem = selected.toString();
+                } else {
+                    selectedItem = "";
                 }
                 try {
                     HttpClientUtil client = new HttpClientUtil(settings);
-                    ArrayList<String> projects = client.GetProjectList();
+                    HashMap<String, String> projects = client.GetProjectList();
                     projectBox.removeAllItems();
-                    for (int i = 0; i < projects.size(); i++) {
-                        projectBox.addItem(projects.get(i));
-                        if (projects.get(i).equals(selectedItem)) {
-                            projectBox.setSelectedItem(projects.get(i));
-                            settings.setProjectName(projects.get(i));
+
+                    projects.forEach((k, v) -> {
+                        projectBox.addItem(k);
+                        if (k.equals(selectedItem)) {
+                            projectBox.setSelectedItem(k);
+                            settings.setProjectName(k);
+                            settings.setProjectUID(v);
                         }
-                    }
+                    });
                     projectBox.updateUI();
                     projectBox.setPopupVisible(true);
                 } catch (Exception exception) {
@@ -233,10 +229,9 @@ public class SQLESettingUI extends Observable {
         dbDataSourceBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                String projectSelected = (String) projectBox.getSelectedItem();
+                String projectSelected = settings.getProjectUID();
                 String dbTypeSelected = (String) dbTypeBox.getSelectedItem();
-                if (projectSelected == null || projectSelected.equals("") ||
-                        dbTypeSelected == null || dbTypeSelected.equals("")) {
+                if (projectSelected == null || projectSelected.equals("") || dbTypeSelected == null || dbTypeSelected.equals("")) {
                     return;
                 }
 
@@ -278,9 +273,7 @@ public class SQLESettingUI extends Observable {
                 String projectSelected = (String) projectBox.getSelectedItem();
                 String dbTypeSelected = (String) dbTypeBox.getSelectedItem();
                 String dbDataSourceSelected = (String) dbDataSourceBox.getSelectedItem();
-                if (projectSelected == null || projectSelected.equals("") ||
-                        dbTypeSelected == null || dbTypeSelected.equals("") ||
-                        dbDataSourceSelected == null || dbDataSourceSelected.equals("")) {
+                if (projectSelected == null || projectSelected.equals("") || dbTypeSelected == null || dbTypeSelected.equals("") || dbDataSourceSelected == null || dbDataSourceSelected.equals("")) {
                     return;
                 }
 

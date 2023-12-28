@@ -7,6 +7,6 @@ import lombok.ToString;
 @Data
 @ToString
 public class SQLEDataSourceNameListResult {
-    @SerializedName("instance_name")
-    private String instanceName;
+    @SerializedName("name")
+    private String name;
 }

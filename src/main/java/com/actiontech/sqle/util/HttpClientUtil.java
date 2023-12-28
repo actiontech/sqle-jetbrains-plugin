@@ -23,21 +23,21 @@ public class HttpClientUtil {
     private String token;
     private SQLESettings settings;
 
-    private static final String loginPath = "/v1/login";
-    private static final String auditPath = "/v2/audit_files";
-    private static final String driversPath = "/v1/configurations/drivers";
+    private static final String loginPath = "/v1/dms/sessions";
+    private static final String auditPath = "/sqle/v2/audit_files";
+    private static final String driversPath = "/sqle/v1/configurations/drivers";
 
-    private static final String ruleKnowledgePath = "/v1/rule_knowledge/db_types/%s/rules/%s/";
+    private static final String ruleKnowledgePath = "/sqle/v1/rule_knowledge/db_types/%s/rules/%s/";
 
-    private static final String customRuleKnowledgePath = "/v1/rule_knowledge/db_types/%s/custom_rules/%s/";
+    private static final String customRuleKnowledgePath = "/sqle/v1/rule_knowledge/db_types/%s/custom_rules/%s/";
 
-    private static final String projectPath = "/v1/projects";
+    private static final String projectPath = "/v1/dms/projects";
 
-    private static final String dataSourcePath = "/v1/projects/%s/instances";
+    private static final String dataSourcePath = "/v1/dms/projects/%s/db_services";
 
-    private static final String schemaPath = "/v1/projects/%s/instances/%s/schemas";
+    private static final String schemaPath = "/sqle/v1/projects/%s/instances/%s/schemas";
 
-    private static final String sqlAnalysisPath = "/v1/sql_analysis";
+    private static final String sqlAnalysisPath = "/sqle/v1/sql_analysis";
 
     public HttpClientUtil(SQLESettings settings) {
         String protocol = "http://";
@@ -55,11 +55,15 @@ public class HttpClientUtil {
         req.put("password", settings.getPassword());
         Gson gson = new Gson();
         String reqJson = gson.toJson(req);
-        JsonObject resp = sendPostJson(uriHead + loginPath, reqJson);
+
+        String formatStr = String.format("{\"session\":%s}", reqJson);
+
+        JsonObject resp = sendPostJson(uriHead + loginPath, formatStr);
         if (resp.get("code").getAsInt() != 0) {
             throw new Exception("login failed: " + resp.get("message").getAsString());
         }
-        token = resp.get("data").getAsJsonObject().get("token").getAsString();
+        String tokenResp = resp.get("data").getAsJsonObject().get("token").getAsString();
+        this.token = "Bearer " + tokenResp;
         settings.setToken(token);
         return token;
     }
@@ -81,7 +85,7 @@ public class HttpClientUtil {
         return list;
     }
 
-    public ArrayList<String> GetProjectList() throws Exception {
+    public HashMap<String, String> GetProjectList() throws Exception {
         if (token == null || token.equals("")) {
             Login();
         }
@@ -98,22 +102,22 @@ public class HttpClientUtil {
 
         JsonElement jsonObject = resp.get("data");
         List<SQLEProjectNameListResult> ProjectNameList = gson.fromJson(jsonObject, datasetListType);
-        ArrayList<String> list = new ArrayList<>();
+        HashMap<String, String> list = new HashMap<>();
         for (SQLEProjectNameListResult sqleProjectNameListResult : ProjectNameList) {
-            list.add(sqleProjectNameListResult.getName());
+            list.put(sqleProjectNameListResult.getName(), sqleProjectNameListResult.getUID());
         }
 
         return list;
     }
 
-    public ArrayList<String> GetDataSourceNameList(String projectName, String dbType) throws Exception {
+    public ArrayList<String> GetDataSourceNameList(String projectID, String dbType) throws Exception {
         if (token == null || token.equals("")) {
             Login();
         }
 
-        String dataSourcePath = String.format(HttpClientUtil.dataSourcePath, projectName);
+        String dataSourcePath = String.format(HttpClientUtil.dataSourcePath, projectID);
         String encodedDbType = URLEncoder.encode(dbType, "UTF-8");
-        String reqPath = String.format("%s?filter_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, encodedDbType, "1", "999999");
+        String reqPath = String.format("%s?filter_by_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, encodedDbType, "1", "999999");
         JsonObject resp = sendGet(uriHead + reqPath);
 
         if (resp.get("code").getAsInt() != 0) {
@@ -128,7 +132,7 @@ public class HttpClientUtil {
         List<SQLEDataSourceNameListResult> dataSourceNameListResultList = gson.fromJson(jsonObject, datasetlisttype);
         ArrayList<String> list = new ArrayList<>();
         for (SQLEDataSourceNameListResult dataSourceNameListResult : dataSourceNameListResultList) {
-            list.add(dataSourceNameListResult.getInstanceName());
+            list.add(dataSourceNameListResult.getName());
         }
 
         return list;
