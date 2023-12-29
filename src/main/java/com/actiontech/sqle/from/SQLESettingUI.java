@@ -35,6 +35,8 @@ public class SQLESettingUI extends Observable {
     private JComboBox SchemaBox;
     public static SQLESettings settings;
 
+    public static HashMap<String, String> projects;
+
     public SQLESettingUI(SQLESettings settings) {
         this.settings = settings;
         loadSettings(settings);
@@ -159,7 +161,7 @@ public class SQLESettingUI extends Observable {
                 }
                 try {
                     HttpClientUtil client = new HttpClientUtil(settings);
-                    HashMap<String, String> projects = client.GetProjectList();
+                    projects = client.GetProjectList();
                     projectBox.removeAllItems();
 
                     projects.forEach((k, v) -> {
@@ -167,7 +169,6 @@ public class SQLESettingUI extends Observable {
                         if (k.equals(selectedItem)) {
                             projectBox.setSelectedItem(k);
                             settings.setProjectName(k);
-                            settings.setProjectUID(v);
                         }
                     });
                     projectBox.updateUI();
@@ -229,7 +230,7 @@ public class SQLESettingUI extends Observable {
         dbDataSourceBox.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                String projectSelected = settings.getProjectUID();
+                String projectSelected = (String) projectBox.getSelectedItem();
                 String dbTypeSelected = (String) dbTypeBox.getSelectedItem();
                 if (projectSelected == null || projectSelected.equals("") || dbTypeSelected == null || dbTypeSelected.equals("")) {
                     return;
@@ -242,7 +243,7 @@ public class SQLESettingUI extends Observable {
                 }
                 try {
                     HttpClientUtil client = new HttpClientUtil(settings);
-                    ArrayList<String> dataSources = client.GetDataSourceNameList(projectSelected, dbTypeSelected);
+                    ArrayList<String> dataSources = client.GetDataSourceNameList(projects.get(projectSelected), dbTypeSelected);
                     dbDataSourceBox.removeAllItems();
                     for (int i = 0; i < dataSources.size(); i++) {
                         dbDataSourceBox.addItem(dataSources.get(i));
