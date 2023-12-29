@@ -52,7 +52,8 @@ public class InstStatusBarWidget extends EditorBasedStatusBarPopup implements Ob
         HttpClientUtil client = new HttpClientUtil(SQLESettingUI.settings);
         ArrayList<String> instList;
         try {
-            instList = client.GetDataSourceNameList(SQLESettingUI.settings.getProjectUID(), SQLESettingUI.settings.getDBType());
+            String projectID = SQLESettingUI.projects.get(SQLESettingUI.settings.getProjectName());
+            instList = client.GetDataSourceNameList(projectID, SQLESettingUI.settings.getDBType());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
