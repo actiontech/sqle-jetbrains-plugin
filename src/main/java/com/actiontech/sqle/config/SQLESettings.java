@@ -24,7 +24,6 @@ public class SQLESettings extends Observable implements PersistentStateComponent
     private String Password;
     private String DBType;
     private String ProjectName;
-    private String ProjectUID;
     private String DataSourceName;
     private String SchemaName;
     private String Token;
