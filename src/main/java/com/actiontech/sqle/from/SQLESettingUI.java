@@ -139,6 +139,7 @@ public class SQLESettingUI extends Observable {
                 String token = client.Login();
                 settings.setToken(token);
                 NotifyUtil.showTipsDialog("Test Connection", "Test Connection Success");
+                projectBox.setFocusable(true);
             } catch (Exception e) {
                 String errMessage = NotifyUtil.getExceptionMessage(e);
                 NotifyUtil.showErrorMessageDialog("Test Connection Failed", errMessage);
@@ -177,7 +178,6 @@ public class SQLESettingUI extends Observable {
                     String errMessage = NotifyUtil.getExceptionMessage(exception);
                     NotifyUtil.showErrorMessageDialog("Get Project List Failed", errMessage);
                     projectBox.setFocusable(false);
-                    projectBox.setFocusable(true);
                 }
             }
 

@@ -60,7 +60,7 @@ public class HttpClientUtil {
 
         JsonObject resp = sendPostJson(uriHead + loginPath, formatStr);
         if (resp.get("code").getAsInt() != 0) {
-            throw new Exception("login failed: " + resp.get("message").getAsString());
+            throw new Exception("login failed,Please check user name and password,then click Test Connection button. " + resp.get("message").getAsString());
         }
         String tokenResp = resp.get("data").getAsJsonObject().get("token").getAsString();
         this.token = "Bearer " + tokenResp;
