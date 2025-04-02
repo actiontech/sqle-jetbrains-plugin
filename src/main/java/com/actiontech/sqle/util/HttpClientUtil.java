@@ -298,7 +298,7 @@ public class HttpClientUtil {
         URL url = new URL(path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
-        conn.setRequestProperty("Authorization", token);
+        conn.setRequestProperty("Authorization", BEARER_TOKEN_PREFIX + token);
         conn.setRequestProperty("Content-Type", "application/json");
         String result = "";
 
