@@ -27,6 +27,8 @@ public class SQLESettings extends Observable implements PersistentStateComponent
     private String DataSourceName;
     private String SchemaName;
     private String Token;
+    private String AccessToken;
+    private String LoginType;
 
     public static SQLESettings getInstance() {
         return ServiceManager.getService(SQLESettings.class);

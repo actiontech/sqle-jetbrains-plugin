@@ -4,6 +4,7 @@ import com.actiontech.sqle.config.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.openapi.diagnostic.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
 import java.io.BufferedReader;
@@ -15,6 +16,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static com.actiontech.sqle.constant.Constant.BEARER_TOKEN_PREFIX;
+import static com.actiontech.sqle.constant.Constant.LOGIN_TYPE_PASSWORD;
 
 public class HttpClientUtil {
     private static final Logger LOG = Logger.getInstance(HttpClientUtil.class);
@@ -49,6 +53,14 @@ public class HttpClientUtil {
         this.uriHead = protocol + settings.getSQLEAddr();
     }
 
+    private void DetermineHaveToken() throws Exception {
+        if (settings.getLoginType().equals(LOGIN_TYPE_PASSWORD) && StringUtils.isBlank(token)) {
+            Login();
+        } else {
+            token = settings.getAccessToken();
+        }
+    }
+
     public String Login() throws Exception {
         Map<String, String> req = new HashMap<>();
         req.put("username", settings.getUserName());
@@ -63,16 +75,13 @@ public class HttpClientUtil {
             throw new Exception("login failed,Please check user name and password,then click Test Connection button. " + resp.get("message").getAsString());
         }
         String tokenResp = resp.get("data").getAsJsonObject().get("token").getAsString();
-        this.token = "Bearer " + tokenResp;
+        this.token = tokenResp;
         settings.setToken(token);
         return token;
     }
 
     public ArrayList<String> GetDBTypes() throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         JsonObject resp = sendGet(uriHead + driversPath);
         if (resp.get("code").getAsInt() != 0) {
             throw new Exception("get db type failed: " + resp.get("message").getAsString());
@@ -86,10 +95,7 @@ public class HttpClientUtil {
     }
 
     public HashMap<String, String> GetProjectList() throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         String reqPath = String.format("%s?page_index=%s&page_size=%s", projectPath, "1", "999999");
         JsonObject resp = sendGet(uriHead + reqPath);
         if (resp.get("code").getAsInt() != 0) {
@@ -111,10 +117,7 @@ public class HttpClientUtil {
     }
 
     public ArrayList<String> GetDataSourceNameList(String projectID, String dbType) throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         String dataSourcePath = String.format(HttpClientUtil.dataSourcePath, projectID);
         String encodedDbType = URLEncoder.encode(dbType, "UTF-8");
         String reqPath = String.format("%s?filter_by_db_type=%s&page_index=%s&page_size=%s", dataSourcePath, encodedDbType, "1", "999999");
@@ -139,10 +142,7 @@ public class HttpClientUtil {
     }
 
     public ArrayList<String> GetSchemaList(String projectName, String dataSourceName) throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         String reqPath = String.format(HttpClientUtil.schemaPath, projectName, dataSourceName);
         JsonObject resp = sendGet(uriHead + reqPath);
 
@@ -160,10 +160,7 @@ public class HttpClientUtil {
     }
 
     public List<SQLESQLAnalysisResult> GetSQLAnalysis(String sql, String projectName, String dataSourceName, String schemaName) throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         String encodedSql = URLEncoder.encode(sql, StandardCharsets.UTF_8);
         String reqPath = String.format("%s%s?project_name=%s&instance_name=%s&schema_name=%s&sql=%s", uriHead, sqlAnalysisPath, projectName, dataSourceName, schemaName, encodedSql);
         JsonObject resp = sendGet(reqPath);
@@ -193,10 +190,7 @@ public class HttpClientUtil {
     }
 
     public SQLEAuditResult AuditSQL(String[] contents, AuditType type, String projectName, String instanceName, String schemaName) throws Exception {
-        if (token == null || token.equals("")) {
-            Login();
-        }
-
+        DetermineHaveToken();
         Map<String, Object> req = new HashMap<>();
         req.put("instance_type", settings.getDBType());
         req.put("file_contents", contents);
@@ -225,10 +219,7 @@ public class HttpClientUtil {
     }
 
     public String GetRuleKnowledge(String dbType, String ruleName) throws Exception {
-        if (token == null || token.isEmpty()) {
-            Login();
-        }
-
+        DetermineHaveToken();
         // sqle服务端默认只能解析%20表示的空格
         // 注意:java 的 URLEncoder.encode 方法默认将空格转换为+号
         String encodeDbType = dbType.replace(" ", "%20");
@@ -245,9 +236,7 @@ public class HttpClientUtil {
     }
 
     public String GetOriginRuleKnowledge(String dbType, String ruleName) throws Exception {
-        if (token == null || token.isEmpty()) {
-            Login();
-        }
+        DetermineHaveToken();
 
         String reqPath = String.format(ruleKnowledgePath, dbType, ruleName);
         JsonObject resp = sendGet(uriHead + reqPath);
@@ -264,9 +253,7 @@ public class HttpClientUtil {
     }
 
     public String GetCustomRuleKnowledge(String dbType, String ruleName) throws Exception {
-        if (token == null || token.isEmpty()) {
-            Login();
-        }
+        DetermineHaveToken();
 
         String reqPath = String.format(customRuleKnowledgePath, dbType, ruleName);
         JsonObject resp = sendGet(uriHead + reqPath);
@@ -285,7 +272,7 @@ public class HttpClientUtil {
         URL url = new URL(path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
-        conn.setRequestProperty("Authorization", token);
+        conn.setRequestProperty("Authorization", BEARER_TOKEN_PREFIX + token);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         String inputLine;
