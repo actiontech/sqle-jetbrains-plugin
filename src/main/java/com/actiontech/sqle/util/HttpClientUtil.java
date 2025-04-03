@@ -54,8 +54,10 @@ public class HttpClientUtil {
     }
 
     private void DetermineHaveToken() throws Exception {
-        if (settings.getLoginType().equals(LOGIN_TYPE_PASSWORD) && StringUtils.isBlank(token)) {
-            Login();
+        if (settings.getLoginType().equals(LOGIN_TYPE_PASSWORD)) {
+            if (StringUtils.isBlank(token)) {
+                Login();
+            }
         } else {
             token = settings.getAccessToken();
         }
