@@ -53,6 +53,12 @@ public class HttpClientUtil {
         this.uriHead = protocol + settings.getSQLEAddr();
     }
 
+    /**
+     * 在使用密码登陆到情况下，检测是否已经登录，如果没有登录，则调用登录接口,获取到token。
+     * 使用Token登陆时，直接获取前端填写的AccessToken
+     *
+     * @throws Exception
+     */
     private void DetermineHaveToken() throws Exception {
         if (settings.getLoginType().equals(LOGIN_TYPE_PASSWORD)) {
             if (StringUtils.isBlank(token)) {
