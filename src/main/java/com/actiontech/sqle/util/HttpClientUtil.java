@@ -35,9 +35,9 @@ public class HttpClientUtil {
 
     private static final String customRuleKnowledgePath = "/sqle/v1/rule_knowledge/db_types/%s/custom_rules/%s/";
 
-    private static final String projectPath = "/v1/dms/projects";
+    private static final String projectPath = "/v2/dms/projects";
 
-    private static final String dataSourcePath = "/v1/dms/projects/%s/db_services";
+    private static final String dataSourcePath = "/v2/dms/projects/%s/db_services";
 
     private static final String schemaPath = "/sqle/v1/projects/%s/instances/%s/schemas";
 
